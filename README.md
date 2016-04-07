@@ -13,10 +13,14 @@ CS321 project 4 group repo
 3. Create your branch
 
 	To keep the project clean and have one stable code base we should each have our own branch.
-	1. `cd P4_Bioinfomatics`.
-	2. `git branch <branch name>` creates a new branch (for consistency, we should just use our name).
-	3. `git branch checkout <branch name>` switch to that branch.
-	4. `git push origin <branch name>` pushes your local branch to the GitHub repo.
+	
+	1.`cd P4_Bioinfomatics`.
+
+	2.`git branch <branch name>` creates a new branch (for consistency, we should just use our name).
+
+	3.`git branch checkout <branch name>` switch to that branch.
+	
+	4.`git push origin <branch name>` pushes your local branch to the GitHub repo.
 
 	To check if you branched correctly refresh the GitHub page and you should see the number of branches (below the repo description) change. If your branch doesn't show up [here](https://github.com/BigCheeze45/P4_Bioinfomatics/branches) then give it a shot again. [This page](https://github.com/BigCheeze45/P4_Bioinfomatics/branches) has a nice walk-through of branching a repo.
 
