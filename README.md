@@ -18,7 +18,7 @@ CS321 project 4 group repo
 
 	2.`git branch <branch name>` creates a new branch (for consistency, we should just use our name).
 
-	3.`git branch checkout <branch name>` switch to that branch.
+	3.`git checkout <branch name>` switch to that branch.
 	
 	4.`git push origin <branch name>` pushes your local branch to the GitHub repo.
 
