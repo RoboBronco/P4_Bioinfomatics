@@ -39,7 +39,7 @@ Your workflow shoud be as follow:
         ...git pull origin master
         ....do some work, commit, push...etc
     2. On GitHub submit a pull request for your branch
-    3. Merge into master (if there are no conflicts). Once you've merged your branch will be ahead 
+    3. Merge into master (if there are no conflicts). Once you've merged your branch will be behind 
     by a commit so you'll need to set it back to be inline with master. You do that as follow:
         1. git checkout master
         2. git pull
