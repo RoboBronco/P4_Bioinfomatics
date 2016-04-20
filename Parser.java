@@ -36,7 +36,7 @@ public class Parser extends ConvertDNAToLong {
 			current = scan.next();
 			for (int k = 0; k < current.length(); k++){
 				currentChar = current.charAt(k);
-				if (currentChar > 64){ //To exclude numbers from being added to collection, ascii table values
+				if (currentChar > 64){ //To exclude numbers from being added to collection, ascii table values. if we don't exclude numbers....convertToLong will fail.
 					dnaSeq.add(currentChar);
 				}
 //				System.out.println(currentChar);
