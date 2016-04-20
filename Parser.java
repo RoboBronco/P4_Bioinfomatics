@@ -24,11 +24,10 @@ public class Parser extends ConvertDNAToLong {
 			System.out.println("lel. file not found.");
 		}
 		String current = "";
-		int i = 0;
+
 		//get to the DNA part...
 		while(!current.equals("ORIGIN      ")){
 			current = scan.nextLine();
-			i++;
 		}
 		//get dna
 		char currentChar = ' ';
@@ -39,22 +38,17 @@ public class Parser extends ConvertDNAToLong {
 				if (currentChar > 64){ //To exclude numbers from being added to collection, ascii table values. if we don't exclude numbers....convertToLong will fail.
 					dnaSeq.add(currentChar);
 				}
-//				System.out.println(currentChar);
+
 			}
+			this.binary = convertToLong(dnaSeq); //convert to long.
+			System.out.println(binary); //print the long.
+			System.out.println(convertFromLong(this.binary)); //confirm we get what we expect back.
+
+			dnaSeq.clear();
 
 		}
-		System.out.println(dnaSeq.toString());
-
-
-
-
-
-
-		this.binary = convertToLong(dnaSeq);
-		
 
 	}
-
 
 	public long getBinary(){
 		return this.binary;
