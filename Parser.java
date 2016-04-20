@@ -13,7 +13,7 @@ import java.util.Scanner;
 
 public class Parser extends ConvertDNAToLong {
 
-	private long binary;
+	private long longRepresentation;
 	private Scanner scan;
 	private Collection<Character> dnaSeq = new ArrayList<Character>();
 
@@ -23,6 +23,7 @@ public class Parser extends ConvertDNAToLong {
 		} catch (FileNotFoundException e) {
 			System.out.println("lel. file not found.");
 		}
+		
 		String current = "";
 
 		//get to the DNA part...
@@ -40,28 +41,20 @@ public class Parser extends ConvertDNAToLong {
 				}
 
 			}
-			this.binary = convertToLong(dnaSeq); //convert to long.
-			System.out.println(binary); //print the long.
-			System.out.println(convertFromLong(this.binary)); //confirm we get what we expect back.
+			this.longRepresentation = convertToLong(dnaSeq); //convert to long.
+			//For Testing
+			System.out.println(longRepresentation); //print the long.
+			System.out.println(convertFromLong(this.longRepresentation)); //confirm we get what we expect back.
 
+			//Clear the collection.
 			dnaSeq.clear();
 
 		}
 
 	}
 
-	public long getBinary(){
-		return this.binary;
+	public long getLongRepresentation(){
+		return this.longRepresentation;
 	}
-
-
-
-
-
-
-
-
-
-
 
 }
