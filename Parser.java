@@ -6,26 +6,33 @@ import java.util.Scanner;
 
 
 /**
- *@author Jayden Weaver
+ * @author Jayden Weaver
+ * Parses dna string from text files.
  */
-
-//currently only parses one set of DNA. Will add more soon.
-
 public class Parser extends ConvertDNAToLong {
 
 	private long longRepresentation;
 	private Scanner scan;
 	private Collection<Character> dnaSeq = new ArrayList<Character>();
 
+	/**
+	 * Attempts to open a file with a scanner and then calls the parseIt method.
+	 * @param file
+	 */
 	public void parse(File file){
 		try {
 			this.scan = new Scanner(file);
 		} catch (FileNotFoundException e) {
 			System.out.println("lel. file not found.");
 		}
-		
+		parseIt();		
+	}
+	
+	/**
+	 * Does the actual parsing of the dna strings and calls the convertToLong method, inside of the ConvertDNAToLong class.
+	 */
+	private void parseIt(){
 		String current = "";
-
 		//get to the DNA part...
 		while(!current.equals("ORIGIN      ")){
 			current = scan.nextLine();
@@ -48,11 +55,19 @@ public class Parser extends ConvertDNAToLong {
 
 			//Clear the collection.
 			dnaSeq.clear();
-
 		}
-
+		
+		//multiple dna set capabilities
+		if (scan.hasNext()){
+			parseIt();
+		}
+		
 	}
 
+	/**
+	 * Returns the long representation of the DNA sequence.
+	 * @return longRepresentation 
+	 */
 	public long getLongRepresentation(){
 		return this.longRepresentation;
 	}
