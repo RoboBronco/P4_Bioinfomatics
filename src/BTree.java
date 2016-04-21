@@ -48,36 +48,47 @@ public class BTree {
 		return 1;
 	}
 	
-	private class BTreeNode {
-		private int numberOfKeys;
-		private int parent, nodeKey;									// parent of node
-//		private int nodeKey;								// Index/key of node
-		private ArrayList<TreeObject> keys;			// ArrayList of TreeObjects
-		private ArrayList<Integer> children;		// ArrayList of children
-		
-		BTreeNode() {
-			keys = new ArrayList<>(BTree.this.MAX_NUM_KEYS);
-			children = new ArrayList<>(BTree.this.MAX_NUM_CHILDREN);
+    private void splitChild(BTreeNode x, int nodeInex){
+
+    }
+
+
+    private class BTreeNode {
+        private int numberOfKeys;
+        private int parent, nodeKey;									// parent of node
+        //		private int nodeKey;								// Index/key of node
+        private ArrayList<TreeObject> keys;			// ArrayList of TreeObjects
+        private ArrayList<Integer> children;		// ArrayList of children
+        private boolean isLeaf;
+
+        BTreeNode() {
+            keys = new ArrayList<>(BTree.this.MAX_NUM_KEYS);
+            children = new ArrayList<>(BTree.this.MAX_NUM_CHILDREN);
             numberOfKeys = keys.size();
-		}
-		
-		public boolean isLeaf() {
-            return children.size() == 0;
+        }
+
+        public boolean isLeaf() {
+            if(children.size() == 0)
+                isLeaf = true;
+            else
+                isLeaf = true;
+
+            return isLeaf;
 //			if(node.numChildren == 0){
 //				return true;
 //				return false;
 //			}
-		}
-		
-		public boolean isFull() {
-          return numberOfKeys == BTree.this.MAX_NUM_KEYS;
+        }
+
+        public boolean isFull() {
+            return numberOfKeys == BTree.this.MAX_NUM_KEYS;
 // if(node.numberOfKeys == maxNumKeys){
 //				return true;
 //			}
 //			return false;
-		}
+        }
 
-        public void insertNonFull(TreeObject k){
+        public void insertNonFull(TreeObject k) {
             int i = keys.size()  - 1;
 
             if(isLeaf())
@@ -90,8 +101,8 @@ public class BTree {
                 }
                 keys.set(i+1, k);
                 numberOfKeys = keys.size();
-                //write node to disk
-                //return handle to where we dropped k
+                //TODO write node to disk
+                //TODO return handle to where we dropped k
             }
             else
             {
@@ -113,17 +124,12 @@ public class BTree {
             }
             else
                 return;
-                BTree.this.root.insertNonFull(k);
+            BTree.this.root.insertNonFull(k);
 
         }
 
 
         public void splitChild(){}
-	}
-
-
-    private void splitChild(BTreeNode x, int nodeInex){
-
     }
 
 }
