@@ -24,5 +24,5 @@ public class TreeObject {
 	public void increaseFrequency(){
 		this.frequency++;
 	}
-	
+
 }
