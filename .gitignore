@@ -1,6 +1,7 @@
 # Generated files #
 *.class
 out/
+bin/
 *.idea
 *.iml
 **.DS_Store
