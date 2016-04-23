@@ -30,6 +30,7 @@ public class Parser extends ConvertDNAToLong {
 		}
 		parseIt();		
 	}
+<<<<<<< f3a8f9232d2ed67db221a050e636f7f2d170311d
 
 	/**
 	 * Does the actual parsing of the dna strings and calls the convertToLong method, inside of the ConvertDNAToLong class.
@@ -82,3 +83,12 @@ public class Parser extends ConvertDNAToLong {
 	}
 
 }
+=======
+	
+	
+	
+	
+	
+	
+}
+>>>>>>> Midsession commit, updated argument and error handling for CreateBTree.
