@@ -1,4 +1,3 @@
-
 public class OptimalDegreeGenerator{
 
 	//TODO constructor?
