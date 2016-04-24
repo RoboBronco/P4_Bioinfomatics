@@ -59,7 +59,7 @@ public class TreeWriter {
     //TODO should return a BTreeNode (index?) instead of void
     public void readFromDisk() throws IOException {
         fOut = new RandomAccessFile(file, "rwd");
-        fOut.seek(300);
+        fOut.seek(350);
         for(long i = fOut.getFilePointer();i < fOut.length(); i++) {
             System.out.print(fOut.read() + " ");
         }
