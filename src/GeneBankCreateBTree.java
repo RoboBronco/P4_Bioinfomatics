@@ -25,7 +25,7 @@ public class GeneBankCreateBTree {
 				}
 
             }
-	}//end main	
+	}
 
 		
 	public static <T> void cachelessBTree(){ // generic? static necessary?
@@ -51,22 +51,28 @@ public class GeneBankCreateBTree {
 
 		try {
 			File gbFile = new File(gbName); // TODO double check that this is working. 
+			//here is where parsing takes place 
+			//Each sequence will be passed to BTree as a new BTree Object, and handled there
+			//Once we have finished parsing the file, we will write the BTree to disc
+			//The file containing the BTree will be named according to the project specifications. 
+			//I may write a method or seperate class to handle naming.
 		}
 		catch(FileNotFoundException fnfe){
 			system.out.println("Genebank File Not Found: Program Terminated.");
 			exit(1);
 		}	
 	
-	}//end Cacheless
+	}
 
 
 
 
 	public static <T> void cachedBTree(){
 	
+	//This will, more or less, be the same as the above. Will update once we've discussed cache implementation.	
 	
 	
-	}//end Cached
+	}
 						
 }
 
