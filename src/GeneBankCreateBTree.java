@@ -7,9 +7,9 @@ public class GeneBankCreateBTree {
 
             if (args.length() < 4 || args.length() > 6 ){
             //print usage
-                system.out.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
-				system.out.println("[<cache size>] should only be specified if you are using a cache.");
-            //exit
+                System.out.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
+				System.out.println("[<cache size>] should only be specified if you are using a cache.");
+            	exit(1);
             }
      		else{
 				if (args[0] == 0){
@@ -19,9 +19,10 @@ public class GeneBankCreateBTree {
 					cachedBTree();
 				}
 				else{
-				system.out.println("First argument must be a 0 or 1 to determine if cache is used");
-				system.out.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
-				system.out.println("[<cache size>] should only be specified if you are using a cache.");
+					System.out.println("First argument must be a 0 or 1 to determine if cache is used");
+					System.out.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
+					System.out.println("[<cache size>] should only be specified if you are using a cache.");
+					exit(1);
 				}
 
             }
@@ -45,8 +46,18 @@ public class GeneBankCreateBTree {
 		degree = OptimalDegreeGenerator.generate();		
 		}
 		
-		if (!sequence <= 31 || !sequence >= 1){
-		//TODO error handling for improper sequence length values 	
+		if (!sequence >= 1){
+			System.out.println("specified sequence is too short, or is negative");
+			System.out.println("Please specifiy a sequence length such that 1 <= sequence <= 31")
+			System.out.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
+			exit(1);					
+		}
+
+		if (!sequence <= 31){
+			System.out.println("specified sequence length is too long.")
+			 System.out.println("Please specifiy a sequence length such that 1 <= sequence <= 31")
+            System.out.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
+            exit(1);
 		}
 
 		try {
