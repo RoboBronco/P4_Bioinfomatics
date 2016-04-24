@@ -3,7 +3,7 @@ import java.util.*;
 
 public class BTree {
 
-	private BTreeNode root, current, lChild, rChild;
+	private BTreeNode root, current;
 	private int degree;									// Degree of BTree
 	private int k;										// Sequence length
 	private int numNodes;								// Number of nodes
@@ -24,15 +24,17 @@ public class BTree {
 	}
 
 	public void BTreeInsert(TreeObject key){
+		// BOOK pg. 495
 		BTreeNode node = root;
 		if(node.getNumTreeObjects() == maxNumKeys)
 		{
-			BTreeNode newNode = new BTreeNode();
-
-			newNode.isLeaf = false;
-			root = newNode;
-			BTreeSplitChild(newNode,1,node);
-			BTreeInsertNonFull(newNode,key);
+			// ALLOCATE NODE
+			BTreeNode alNode = new BTreeNode();
+			alNode.isLeaf = false;
+			root = alNode;
+			alNode.setChild(node.nodeIndex,0);
+			BTreeSplitChild(alNode,1);
+			BTreeInsertNonFull(alNode,key);
 		}
 		else
 		{
@@ -41,39 +43,66 @@ public class BTree {
 	}
 
 	public void BTreeInsertNonFull(BTreeNode node, TreeObject key){
-		int i = node.numKeys;	       
+		// BOOK pg. 496
+		int i = node.numKeys;
+		boolean found = false;
 		if(node.isLeaf)
 		{
-			while(i >= 1 && key.getKey() < node.getTreeObject(i).getKey())
+			while(i >= 1 && key.getKey() <= node.getTreeObject(i-1).getKey())
 			{
-				long tmpkey = node.getTreeObject(i).getKey();
-				//node.getTreeObject(i+1).getKey() = node.getTreeObject(i).getKey();
-				{
-					node.getTreeObject(i).increaseFrequency();
-
-					//write to disk;
-				}
+                if(key.getKey() == node.getTreeObject(i-1).getKey())
+                {
+                	node.getTreeObject(i-1).increaseFrequency();
+                    found = true;
+                    //diskWrite(node);
+                }
 				i--;
 			}
+            if(!found)
+            {
+                node.setTreeObject(i,key);
+                //diskWrite(node);
+            }
 		}
 		else
 		{
-			while(i >= 1 && key.getKey() < node.getTreeObject(i).getKey())
+			while(i >= 1 && key.getKey() <= node.getTreeObject(i-1).getKey())
 			{
 				if(key.getKey() == node.getTreeObject(i-1).getKey())
 				{
 
 					node.getTreeObject(i-1).increaseFrequency();
-					//write to disk
+					found = true;
+					//diskWrite(node);
 
 				}
 				i--;
 			}
-
+			if(!found){
+				BTreeNode child = diskRead(node.getChild(i));
+                if(child.getNumTreeObjects() == maxNumKeys)
+                {
+                    //BTreeSplitChild();
+                    if(key.getKey() == node.getTreeObject(i).getKey())
+                    {
+                    	node.getTreeObject(i).increaseFrequency();
+                    	diskWrite(node);
+                      	found = true;
+                    }
+                    if(key.getKey() > node.getTreeObject(i).getKey() && !found)
+                    {
+                        i++;
+                        child = diskRead(node.getChild(i));
+                    }
+                }
+                if(!found){
+                	BTreeInsertNonFull(child,key);
+                }
+            }
+			}
 		}
-	}
 
-	public void BTreeSplitChild(BTreeNode parent, int childKey, BTreeNode node){
+	public void BTreeSplitChild(BTreeNode parent, int i){
 
 	}
 
@@ -95,33 +124,27 @@ public class BTree {
 		return root;
 	}
 
-	/*public FoundNode Search(BTreeNode node, TreeObject key){
-		int i = 1;
-
+	public FoundNode BTreeSearch(BTreeNode node, TreeObject key){
+		
 		if(node == null || node.numKeys < 1){
 			return null;
 		}
 
+		// BOOK pg.492
+		int i = 1;
 		while(i <= node.keys.size() && key.getKey() > node.keys.get(i).getKey()){
 			i++;
 		}
 		if(i <= node.keys.size() && key.getKey() == node.keys.get(i).getKey()){
 			return new FoundNode(node,i);
-		}
-		if(node.isLeaf){
+		}else if(node.isLeaf){
 			return null;
+		}else{
+			diskRead(node.getChild(i));
+			return BTreeSearch(node, key);
 		}
-		//return ;	
-	}*/
-
-	void diskRead(){
-
 	}
-
-	void diskWrite(){
-
-	}
-
+	
 	public class FoundNode{
 
 		BTreeNode foundnode;
@@ -133,6 +156,19 @@ public class BTree {
 		}
 
 	}
+
+	// JUST A PLACEHOLDER 
+	public BTreeNode diskRead(int nodeIndex){
+		BTreeNode a = new BTreeNode();
+		return a;
+	}
+
+	// JUST A PLACEHOLDER 
+	void diskWrite(BTreeNode a){
+
+	}
+
+
 
 	public class BTreeNode{
 
@@ -150,37 +186,45 @@ public class BTree {
 			nodeIndex = currentNodeIndex;
 			keys = new ArrayList<TreeObject>(maxNumKeys);
 			children = new ArrayList<Integer>(maxNumChildren);
+
 			isLeaf = true;
 			currentNodeIndex++;
 		}
 
 		public BTreeNode (int nodeIndex){
-			children = new ArrayList<Integer>();
+			numKeys = keys.size();
+			numChildren = children.size();
 			keys  = new ArrayList<TreeObject>();
-			this.nodeIndex = nodeIndex;
+			children = new ArrayList<Integer>();
+			this.nodeIndex = nodeIndex;	
 		}
+		
 		public boolean isLeaf(){
 			return isLeaf;
 		}
 
+		public boolean isFull(){
+			return (numKeys == maxNumKeys);
+		}
+		
 		public int getNodeIndex()
 		{
 			return nodeIndex;
 		}
-
-		public void setTreeObject(TreeObject key, int index)
+		
+		public int getNumTreeObjects()
 		{
-			keys.add(index,key);
+			return keys.size();
 		}
 
 		public TreeObject getTreeObject(int index)
 		{
-			return (TreeObject) keys.get(index);
+			return keys.get(index);
 		}
-
-		public int getNumTreeObjects()
+		
+		public void setTreeObject(int index, TreeObject key)
 		{
-			return keys.size();
+			keys.add(index,key);
 		}
 
 		public int getChild(int index)
@@ -188,14 +232,12 @@ public class BTree {
 			return children.get(index);
 		}
 
-		public void setChild(int nodeKey, int index)
+		public void setChild(int index, int nodeKey)
 		{
 			children.add(index, nodeKey);
 		}
 
-		public boolean isFull(){
-			return (numKeys == maxNumKeys);
-		}
+
 	}
 
 }
