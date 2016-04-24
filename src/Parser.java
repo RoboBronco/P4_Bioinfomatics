@@ -28,7 +28,7 @@ public class Parser extends ConvertDNAToLong {
 				System.out.println("lel. file not found.");
 			}
 		}
-		parseIt();		
+		parseIt();
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class Parser extends ConvertDNAToLong {
 
 	/**
 	 * Returns the long representation of the DNA sequence.
-	 * @return longRepresentation 
+	 * @return longRepresentation
 	 */
 	public long getLongRepresentation(){
 		return this.longRepresentation;
