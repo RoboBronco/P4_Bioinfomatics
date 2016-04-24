@@ -11,7 +11,7 @@ public class BTree {
 	private int maxNumChildren;							// maximum # of children
 	private int currentNodeIndex;
 	private TreeWriter writer;
-	public BTree(int degree, int k){
+	public BTree(int degree, int k) {
 		currentNodeIndex = 0;
 		this.degree = degree;
 		this.k = k;
@@ -22,6 +22,7 @@ public class BTree {
 		maxNumChildren = maxNumKeys + 1;
 		numNodes = 1;
 		writer = new TreeWriter("TEST_FILE");
+//		System.out.println("INSDIE BTREE CONSTRUCTOR");
 		writer.writeTreeMetaData(numNodes,k,maxNumChildren,maxNumKeys);
 	}
 
@@ -31,6 +32,7 @@ public class BTree {
 	}
 
 	public void BTreeInsert(TreeObject key){
+//		System.out.println("INSERTING INTO TREE");
 		// BOOK pg. 495
 		BTreeNode node = root;
 		if(node.getNumTreeObjects() == maxNumKeys)
@@ -41,6 +43,7 @@ public class BTree {
 			root = alNode;
 			alNode.setChild(node.nodeIndex,0);
 			BTreeSplitChild(alNode,1);
+//			System.out.println("INSERTING NONFULL");
 			BTreeInsertNonFull(alNode,key);
 		}
 		else
@@ -61,6 +64,8 @@ public class BTree {
                 {
                 	node.getTreeObject(i-1).increaseFrequency();
                     found = true;
+//					System.out.println("WRITE TO DISK");
+					writer.writeToDisk(node);
                     //diskWrite(node);
                 }
 				i--;
@@ -198,7 +203,9 @@ public class BTree {
 			currentNodeIndex++;
 		}
 
-		public BTreeNode (int nodeIndex){
+		public ArrayList<Integer> getChildren(){return children;}
+
+		public BTreeNode (int nodeIndex) {
 			numKeys = keys.size();
 			numChildren = children.size();
 			keys  = new ArrayList<TreeObject>();
