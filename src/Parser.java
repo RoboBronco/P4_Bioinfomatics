@@ -81,14 +81,4 @@ public class Parser extends ConvertDNAToLong {
 	public Collection<Character> DNASequence(){
 		return dnaSeq;
 	}
-
 }
-=======
-	
-	
-	
-	
-	
-	
-}
->>>>>>> Midsession commit, updated argument and error handling for CreateBTree.
