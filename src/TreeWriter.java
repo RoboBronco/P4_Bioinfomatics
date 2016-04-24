@@ -12,43 +12,48 @@ public class TreeWriter {
     int seqLength;
     private RandomAccessFile fOut;
     private File file;
-    int[] array = new int[400];
     //Creates the file based on the specified name and length
-    public TreeWriter(String filename) {
-        Random rand = new Random();
 
-        for (int i = 0; i <array.length ; i++) {
-            array[i] = rand.nextInt(100) + 1;
-        }
+    public TreeWriter(String filename) {
         file = new File(filename);
         try {
-            fOut = new RandomAccessFile(filename, "rwd"); //everyupdate to the file is also written to disk
-            //TODO write metadata
-
-            for(int i = 0; i < array.length; i++) {
-               fOut.write(array[i]);
-            }
-//            fOut.write(10);fOut.write(140);fOut.write(120);fOut.write(2222);fOut.write(500);
-            fOut.close();
+            fOut = new RandomAccessFile(file, "rwd"); //everyupdate to the file is also written to disk
         }
         catch (IOException e) {
             System.out.println("something up");
         }
     }
 
-    public TreeWriter(File file) {
-        try {
-//            System.out.println("insdie of construct 2212312");
-            fOut = new RandomAccessFile(file, "rwd");
-            //TODO write metadata
-            fOut.write(7); //sequence length
-            fOut.write(4); //number of nodes, including root
-            //TODO write root
+//    public TreeWriter(File file) {
+//        try {
+////            System.out.println("insdie of construct 2212312");
+//            fOut = new RandomAccessFile(file, "rwd");
+//            //TODO write metadata
+//            fOut.write(7); //sequence length
+//            fOut.write(4); //number of nodes, including root
+//            //TODO write root
+//            fOut.close();
+//        }
+//        catch (IOException e) {
+//            System.out.println("something is up");
+//        }
+//    }
+
+    public void writeTreeMetaData(int numNodes,
+
+                                  int k, int maxNumChildren, int maxNumKeys){
+        try{
+            fOut.write(k);
+            fOut.write(numNodes);
+            fOut.write(maxNumChildren);
+            fOut.write(maxNumKeys);
             fOut.close();
+
         }
-        catch (IOException e) {
-            System.out.println("something is up");
+        catch (IOException e){
+            System.out.println("FILE DOESN'T WORK");
         }
+
     }
 
     //TODO parameter should be a node not a TreeObject
@@ -59,10 +64,12 @@ public class TreeWriter {
     //TODO should return a BTreeNode (index?) instead of void
     public void readFromDisk() throws IOException {
         fOut = new RandomAccessFile(file, "rwd");
-        fOut.seek(350);
+//        fOut.seek(350);
         for(long i = fOut.getFilePointer();i < fOut.length(); i++) {
             System.out.print(fOut.read() + " ");
         }
+
+        System.out.println("\nLENGTH = " + fOut.length());
     }
 
 
@@ -70,6 +77,7 @@ public class TreeWriter {
         TreeWriter writer = new TreeWriter("TREE_WRITER_TEST");
 //        TreeWriter writer1 = new TreeWriter("test1.gbk.btree.data.1");
 
-        writer.readFromDisk();
+        BTree tree = new BTree(4,7);
+        tree.getFile().readFromDisk();
     }
 }

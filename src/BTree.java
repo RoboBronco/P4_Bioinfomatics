@@ -10,7 +10,7 @@ public class BTree {
 	private int maxNumKeys;								// maximum # of keys per node
 	private int maxNumChildren;							// maximum # of children
 	private int currentNodeIndex;
-
+	private TreeWriter writer;
 	public BTree(int degree, int k){
 		currentNodeIndex = 0;
 		this.degree = degree;
@@ -21,6 +21,13 @@ public class BTree {
 		maxNumKeys = (2*degree) - 1;
 		maxNumChildren = maxNumKeys + 1;
 		numNodes = 1;
+		writer = new TreeWriter("TEST_FILE");
+		writer.writeTreeMetaData(numNodes,k,maxNumChildren,maxNumKeys);
+	}
+
+
+	public TreeWriter getFile(){
+		return writer;
 	}
 
 	public void BTreeInsert(TreeObject key){
