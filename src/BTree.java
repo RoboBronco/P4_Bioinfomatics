@@ -1,76 +1,200 @@
 import java.util.ArrayList;
+import java.util.*;
 
 public class BTree {
+
+	private BTreeNode root, current, lChild, rChild;
+	private int degree;									// Degree of BTree
+	private int k;										// Sequence length
+	private int numNodes;								// Number of nodes
+	private int maxNumKeys;								// maximum # of keys per node
+	private int maxNumChildren;							// maximum # of children
+	private int currentNodeIndex;
 	
-	public static final int INT_BYTES = 4;
-	public static final int LONG_BYTES = 8;
-	public static final int TREEOBJECT_BYTES = 12;
-	
-	BTreeNode root;
-	int height;				// Height of BTree
-	int degree;				// Degree of BTree
-	private int debug;		// Debug level
-	int k;					// Sequence length
-	int numNodes;
-	
-	BTree(int degree, int k, int debug, String DNASequence){
-		this.root = new BTreeNode(this.degree, 0);
+	public BTree(int degree, int k){
+		currentNodeIndex = 0;
 		this.degree = degree;
 		this.k = k;
-        numNodes = 1;
+        BTreeNode node = new BTreeNode();
+        node.isLeaf = true;
+		root = node;
+		maxNumKeys = (2*degree) - 1;
+		maxNumChildren = maxNumKeys + 1;
+		numNodes = 1;
 	}
-	
+
 	public void BTreeInsert(TreeObject key){
+        BTreeNode node = root;
+        if(node.getNumTreeObjects() == maxNumKeys)
+        {
+            BTreeNode newNode = new BTreeNode();
+            
+            newNode.isLeaf = false;
+            root = newNode;
+            BTreeSplitChild(newNode,1,node);
+            BTreeInsertNonFull(newNode,key);
+        }
+        else
+        {
+            BTreeInsertNonFull(node,key);
+        }
+	}
+
+	public void BTreeInsertNonFull(BTreeNode node, TreeObject key){
+		int i = node.numKeys;	       
+		if(node.isLeaf)
+		{
+			while(i >= 1 && key.getKey() < node.getTreeObject(i).getKey())
+			{
+				long tmpkey = node.getTreeObject(i).getKey();
+				//node.getTreeObject(i+1).getKey() = node.getTreeObject(i).getKey();
+				{
+					node.getTreeObject(i).increaseFrequency();
+
+					//write to disk;
+				}
+				i--;
+			}
+		}
+		else
+		{
+			while(i >= 1 && key.getKey() < node.getTreeObject(i).getKey())
+			{
+				if(key.getKey() == node.getTreeObject(i-1).getKey())
+				{
+
+					node.getTreeObject(i-1).increaseFrequency();
+					//write to disk
+
+				}
+				i--;
+			}
+
+		}
+	}
+
+	public void BTreeSplitChild(BTreeNode parent, int childKey, BTreeNode node){
+
+	}
+
+    public int getMaxNumChildren(){
+    	return maxNumChildren;
+    }
+    
+    public int getMaxNumKeys(){
+    	return maxNumKeys;
+    }
+	
+    public int getDegree()
+    {
+        return degree;
+    }
+
+    public BTreeNode getRoot()
+    {
+        return root;
+    }
+    
+	/*public FoundNode Search(BTreeNode node, TreeObject key){
+		int i = 1;
+
+		if(node == null || node.numKeys < 1){
+			return null;
+		}
+
+		while(i <= node.keys.size() && key.getKey() > node.keys.get(i).getKey()){
+			i++;
+		}
+		if(i <= node.keys.size() && key.getKey() == node.keys.get(i).getKey()){
+			return new FoundNode(node,i);
+		}
+		if(node.isLeaf){
+			return null;
+		}
+		//return ;	
+	}*/
+
+	void diskRead(){
 		
 	}
 	
-	public void BTreeInsertNonFull(TreeObject key){
+	void diskWrite(){
 		
 	}
 	
-	public void BTreeSplitChild(BTreeNode parent, BTreeNode node, int nodeIndex){
-		
+	public class FoundNode{
+
+		BTreeNode foundnode;
+		int key;
+
+		public FoundNode(BTreeNode node, int key){
+			this.foundnode = node;
+			this.key = key;
+		}
+
 	}
-	
-	public int Search(TreeObject key){
-		return 1;
-	}
-	
-	private class BTreeNode{
-		int numKeys;								// # of keys in Node
-		int maxNumKeys;								// maximum # of keys per node
-		int numChildren;							// # of children
-		int maxNumChildren;							// maximum # of children
-		int parent;									// parent of node
-		int nodeKey;								// Index/key of node
-		int degree;
-		private ArrayList<TreeObject> keys;			// ArrayList of TreeObjects
-		private ArrayList<Integer> children;		// ArrayList of children
-		
+
+	public class BTreeNode{
+
+		private int numKeys;								// # of keys in Node
+		private int numChildren;							// # of children
+		private int parentNodeKey;							// parent of node
+		private int nodeIndex;								// Index/key of node
+		private ArrayList<TreeObject> keys;					// ArrayList of TreeObjects
+		private ArrayList<Integer> children;				// ArrayList of children
 		private boolean isLeaf;
-		
-		BTreeNode(int degree, int nodeKey){
-			this.numKeys = 0;
-			this.maxNumKeys = (2*degree) - 1;
-			this.maxNumChildren = maxNumKeys + 1;
-			this.degree = degree;
-			this.isLeaf = isLeaf;
-			this.keys = new ArrayList<TreeObject>(maxNumKeys);
-			this.children = new ArrayList<Integer>(maxNumChildren);
+
+		public BTreeNode(){
+			numKeys = 0;
+			numChildren = 0;
+			nodeIndex = currentNodeIndex;
+			keys = new ArrayList<TreeObject>(maxNumKeys);
+			children = new ArrayList<Integer>(maxNumChildren);
+			isLeaf = true;
+			currentNodeIndex++;
 		}
 		
-		public boolean isLeaf(BTreeNode node){
-			if(node.numChildren == 0){
-				return true;
-			}
-			return false;
+        public BTreeNode (int nodeIndex){
+        	children = new ArrayList<Integer>();
+            keys  = new ArrayList<TreeObject>();
+            this.nodeIndex = nodeIndex;
+        }
+		public boolean isLeaf(){
+			return isLeaf;
 		}
 		
-		public boolean isFull(BTreeNode node){
-			if(node.numKeys == maxNumKeys){
-				return true;
-			}
-			return false;
+        public int getNodeIndex()
+        {
+            return nodeIndex;
+        }
+		
+		public void setTreeObject(TreeObject key, int index)
+		{
+			keys.add(index,key);
+		}
+
+		public TreeObject getTreeObject(int index)
+		{
+			return (TreeObject) keys.get(index);
+		}
+
+		public int getNumTreeObjects()
+		{
+			return keys.size();
+		}
+
+		public int getChild(int index)
+		{
+			return children.get(index);
+		}
+		
+        public void setChild(int nodeKey, int index)
+        {
+            children.add(index, nodeKey);
+        }
+
+		public boolean isFull(){
+			return (numKeys == maxNumKeys);
 		}
 	}
 
