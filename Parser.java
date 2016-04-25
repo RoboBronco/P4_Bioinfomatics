@@ -71,6 +71,12 @@ public class Parser extends ConvertDNAToLong {
 				longArray.add(convertToLong(respekOnMyName));						
 			}
 		}
+
+		//parses multiple sections
+		if (scan.hasNext()){
+			parseIt();
+		}
+
 		return longArray;
 	}
 
