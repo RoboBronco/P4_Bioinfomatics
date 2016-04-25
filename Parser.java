@@ -9,7 +9,6 @@ import java.util.Scanner;
  */
 public class Parser extends ConvertDNAToLong {
 
-	private long longRepresentation;
 	private Scanner scan, realScanner;
 	private int offSetNum;
 
@@ -19,7 +18,7 @@ public class Parser extends ConvertDNAToLong {
 	 * @param file
 	 * @return longArray
 	 */
-	public ArrayList parse(File file, int offSet){
+	public ArrayList<Long> parse(File file, int offSet){
 		try {
 			this.scan = new Scanner(file);
 			this.realScanner = new Scanner(file);
@@ -34,7 +33,7 @@ public class Parser extends ConvertDNAToLong {
 	 * Does actual parsing of file. Returns ArrayList of longs to parent method.
 	 * @return longArray
 	 */
-	private ArrayList parseIt(){
+	private ArrayList<Long> parseIt(){
 		String current = "";
 		String section = "";
 		//get to the DNA part...
@@ -58,7 +57,7 @@ public class Parser extends ConvertDNAToLong {
 			}
 		}
 
-		ArrayList longArray = new ArrayList();
+		ArrayList<Long> longArray = new ArrayList<Long>();
 		current = newSec;
 		String respekOnMyName = "brrrrrr";
 		while(current != "" && !(current.length() < offSetNum)){
