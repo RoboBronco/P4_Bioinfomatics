@@ -1,9 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Scanner;
-
 
 /**
  * @author Jayden Weaver
@@ -17,7 +15,9 @@ public class Parser extends ConvertDNAToLong {
 
 	/**
 	 * Attempts to open a file with a scanner and then calls the parseIt method.
+	 * Returns an ArrayList of longs received from child method.
 	 * @param file
+	 * @return longArray
 	 */
 	public ArrayList parse(File file, int offSet){
 		try {
@@ -31,8 +31,8 @@ public class Parser extends ConvertDNAToLong {
 	}
 
 	/**+
-	 * Does the actual parsing of the dna strings and calls the convertToLong method, inside of the ConvertDNAToLong class.
-	 * @return 
+	 * Does actual parsing of file. Returns ArrayList of longs to parent method.
+	 * @return longArray
 	 */
 	private ArrayList parseIt(){
 		String current = "";
@@ -72,14 +72,6 @@ public class Parser extends ConvertDNAToLong {
 			}
 		}
 		return longArray;
-	}
-
-	/**
-	 * Returns the long representation of the DNA sequence.
-	 * @return longRepresentation 
-	 */
-	public long getLongRepresentation(){
-		return this.longRepresentation;
 	}
 
 }
