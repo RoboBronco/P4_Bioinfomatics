@@ -20,7 +20,7 @@ public class Parser extends ConvertDNAToLong {
 	 * Attempts to open a file with a scanner and then calls the parseIt method.
 	 * @param file
 	 */
-	public void parse(File file, int offSet){
+	public ArrayList parse(File file, int offSet){
 		try {
 			this.scan = new Scanner(file);
 			this.realScanner = new Scanner(file);
@@ -28,13 +28,14 @@ public class Parser extends ConvertDNAToLong {
 			System.out.println("lel. file not found.");
 		}
 		this.offSetNum = offSet;
-		parseIt();		
+		return parseIt();		
 	}
 
 	/**+
 	 * Does the actual parsing of the dna strings and calls the convertToLong method, inside of the ConvertDNAToLong class.
+	 * @return 
 	 */
-	private void parseIt(){
+	private ArrayList parseIt(){
 		String current = "";
 		String section = "";
 		//get to the DNA part...
@@ -68,9 +69,10 @@ public class Parser extends ConvertDNAToLong {
 			if (!respekOnMyName.contains("N") && !respekOnMyName.contains("O") && !respekOnMyName.contains("I")){
 				System.out.println(respekOnMyName);
 				System.out.println(convertToLong(respekOnMyName));
+				longArray.add(convertToLong(respekOnMyName));						
 			}
 		}
-
+		return longArray;
 	}
 
 	/**
