@@ -65,8 +65,6 @@ public class Parser extends ConvertDNAToLong {
 			current = current.substring(offSetNum - (offSetNum - 1), current.length());
 
 			if (!respekOnMyName.contains("N") && !respekOnMyName.contains("O") && !respekOnMyName.contains("I")){
-				System.out.println(respekOnMyName);
-				System.out.println(convertToLong(respekOnMyName));
 				longArray.add(convertToLong(respekOnMyName));						
 			}
 		}
