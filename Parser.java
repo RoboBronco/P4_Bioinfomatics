@@ -13,7 +13,6 @@ public class Parser extends ConvertDNAToLong {
 
 	private long longRepresentation;
 	private Scanner scan, realScanner;
-	private Collection<Character> dnaSeq = new ArrayList<Character>();
 	private int offSetNum;
 
 	/**
