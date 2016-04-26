@@ -25,14 +25,9 @@ public class Parser extends ConvertDNAToLong {
 		} catch (FileNotFoundException e) {
 			System.out.println("lel. file not found.");
 		}
-<<<<<<< HEAD:src/Parser.java
-		parseIt();
-=======
 		this.offSetNum = offSet;
 		return parseIt();		
->>>>>>> refs/remotes/origin/jayden:Parser.java
 	}
-<<<<<<< f3a8f9232d2ed67db221a050e636f7f2d170311d
 
 	/**+
 	 * Does actual parsing of file. Returns ArrayList of longs to parent method.
@@ -74,21 +69,12 @@ public class Parser extends ConvertDNAToLong {
 			}
 		}
 
-<<<<<<< HEAD:src/Parser.java
-	/**
-	 * Returns the long representation of the DNA sequence.
-	 * @return longRepresentation
-	 */
-	public long getLongRepresentation(){
-		return this.longRepresentation;
-	}
-=======
 		//parses multiple sections
 		if (scan.hasNext()){
 			parseIt();
 		}
->>>>>>> refs/remotes/origin/jayden:Parser.java
 
 		return longArray;
 	}
+
 }
