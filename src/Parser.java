@@ -1,9 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Scanner;
-
 
 /**
  * @author Jayden Weaver
@@ -11,61 +9,72 @@ import java.util.Scanner;
  */
 public class Parser extends ConvertDNAToLong {
 
-	private long longRepresentation;
-	private Scanner scan;
-	private Collection<Character> dnaSeq = new ArrayList<Character>();
-	private String current = "";
+	private Scanner scan, realScanner;
+	private int offSetNum;
 
 	/**
 	 * Attempts to open a file with a scanner and then calls the parseIt method.
+	 * Returns an ArrayList of longs received from child method.
 	 * @param file
+	 * @return longArray
 	 */
-	public void parseNext(File file){
-		if (current == ""){ //don't want to make a scanner again each time lol.
-			try {
-				this.scan = new Scanner(file);
-			} catch (FileNotFoundException e) {
-				System.out.println("lel. file not found.");
-			}
+	public ArrayList<Long> parse(File file, int offSet){
+		try {
+			this.scan = new Scanner(file);
+			this.realScanner = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			System.out.println("lel. file not found.");
 		}
+<<<<<<< HEAD:src/Parser.java
 		parseIt();
+=======
+		this.offSetNum = offSet;
+		return parseIt();		
+>>>>>>> refs/remotes/origin/jayden:Parser.java
 	}
 <<<<<<< f3a8f9232d2ed67db221a050e636f7f2d170311d
 
-	/**
-	 * Does the actual parsing of the dna strings and calls the convertToLong method, inside of the ConvertDNAToLong class.
+	/**+
+	 * Does actual parsing of file. Returns ArrayList of longs to parent method.
+	 * @return longArray
 	 */
-	private Collection<Character> parseIt(){
-
+	private ArrayList<Long> parseIt(){
+		String current = "";
+		String section = "";
 		//get to the DNA part...
-		if (current == ""){
-			while(!current.equals("ORIGIN      ")){
-				current = scan.nextLine();
-			}
+		while(!current.equals("ORIGIN      ")){
+			current = scan.nextLine();
+			section = realScanner.nextLine();
 		}
-		dnaSeq.clear();
-		//get dna
+		//get dna section.
 		char currentChar = ' ';
+
 		while (!current.equals("//")){
-			current = scan.next();
-
-			for (int k = 0; k < current.length(); k++){
-				currentChar = current.charAt(k);
-				if (currentChar > 64){ //To exclude numbers from being added to collection, ascii table values. if we don't exclude numbers....convertToLong will fail.
-					dnaSeq.add(currentChar);
-				}
-			}
-			break;
+			section += realScanner.nextLine();
+			current = scan.nextLine();
 		}
-		return dnaSeq;
 
-		//		//multiple dna set capabilities
-		//		if (scan.hasNext()){
-		//			parseIt();
-		//		}
+		String newSec = "";
+		for (int i = 0; i < section.length(); i++){
+			currentChar = section.charAt(i);
+			if (currentChar > 64){
+				newSec += currentChar;
+			}
+		}
 
-	}
+		ArrayList<Long> longArray = new ArrayList<Long>();
+		current = newSec;
+		String respekOnMyName = "brrrrrr";
+		while(current != "" && !(current.length() < offSetNum)){
+			respekOnMyName = current.substring(0, offSetNum);
+			current = current.substring(offSetNum - (offSetNum - 1), current.length());
 
+			if (!respekOnMyName.contains("N") && !respekOnMyName.contains("O") && !respekOnMyName.contains("I")){
+				longArray.add(convertToLong(respekOnMyName));						
+			}
+		}
+
+<<<<<<< HEAD:src/Parser.java
 	/**
 	 * Returns the long representation of the DNA sequence.
 	 * @return longRepresentation
@@ -73,12 +82,13 @@ public class Parser extends ConvertDNAToLong {
 	public long getLongRepresentation(){
 		return this.longRepresentation;
 	}
+=======
+		//parses multiple sections
+		if (scan.hasNext()){
+			parseIt();
+		}
+>>>>>>> refs/remotes/origin/jayden:Parser.java
 
-	/**
-	 * Returns the DNA Sequence Collection.
-	 * @return DNA Sequence
-	 */
-	public Collection<Character> DNASequence(){
-		return dnaSeq;
+		return longArray;
 	}
 }
