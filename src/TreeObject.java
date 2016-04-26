@@ -1,19 +1,13 @@
-public class TreeObject {
-
-	private long key;
+public class TreeObject{
+	private Long key;
 	private int frequency;
-	
-	public TreeObject(){
-		this.key = 0;
-		this.frequency = 0;
-	}
-	
-	public TreeObject(long key){
+
+	public TreeObject(Long key) {
 		this.key = key;
 		this.frequency = 1;
 	}
 	
-	public long getKey(){
+	public Long getKey(){
 		return this.key;
 	}
 	
@@ -21,8 +15,12 @@ public class TreeObject {
 		return this.frequency;
 	}
 	
-	public void increaseFrequency(){
+	public void increaseFrequency() {
 		this.frequency++;
 	}
 
+	@Override
+	public String toString() {
+		return "Key: " + key + ", Frequency: " + frequency;
+	}
 }
