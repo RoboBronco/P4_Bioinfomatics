@@ -1,8 +1,10 @@
+import java.nio.ByteBuffer;
+
 public class TreeObject{
 	private Long key;
 	private int frequency;
 
-	public TreeObject(Long key) {
+	public TreeObject(long key) {
 		this.key = key;
 		this.frequency = 1;
 	}
@@ -17,6 +19,11 @@ public class TreeObject{
 	
 	public void increaseFrequency() {
 		this.frequency++;
+	}
+
+	public TreeObject(ByteBuffer b){
+		key = b.getLong();
+		frequency = b.getInt();
 	}
 
 	@Override
