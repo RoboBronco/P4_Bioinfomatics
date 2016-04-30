@@ -73,6 +73,11 @@ public class GeneBankCreateBTree {
 			ArrayList<Long> dna = p.parse(gbFile, sequence);
 			
 			//Each sequence will be passed to BTree as a new BTree Object, and handled there
+			int noSeqs = dna.length;
+			for(int i = 0; i < noSeqs; i++){
+				TreeObject obj = new TreeObject(dna[i]);
+				tree.insert(obj);
+			}			
 			
 			//TODO debug level 1
 		}
