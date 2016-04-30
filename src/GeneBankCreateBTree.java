@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 public class GeneBankCreateBTree {
     public static void main (String[] args){
@@ -29,7 +30,7 @@ public class GeneBankCreateBTree {
 	}
 
 		
-	public static <T> void cachelessBTree(){ // generic? static necessary?
+	public static <T> void cachelessBTree() {
 		
 		int degree = Integer.parseInt(args[1]);
 		String gbName = args[2];
@@ -37,17 +38,16 @@ public class GeneBankCreateBTree {
 		int debug = 0;
 		
 		if (args.length == 5){ 
-			 int temp = Integer.parseInt[4];
+			int temp = Integer.parseInt[4];
             if (temp == 1){
                 debug = 1;
             }
-
+			
 		}
 
 		if (degree == 0){
-		//generate opitmal degree
-		system.out.println("Generating optimal degree based on disc size"); 
-		degree = OptimalDegreeGenerator.generate();		
+			system.out.println("Degree of zero specified. Generating optimal degree based on disc size"); 
+			degree = OptimalDegreeGenerator.generate();		
 		}
 		
 		if (!sequence >= 1){
@@ -64,15 +64,17 @@ public class GeneBankCreateBTree {
             exit(1);
 		}
 
-		//create BTree here
 		BTree tree = new BTree(degree, sequence);
+		Parser p = new Parser(); 
 
 		try {
-			File gbFile = new File(gbName); // TODO double check that this is working. 
-			//here is where parsing takes place 
+			
+			File gbFile = new File(gbName); 
+			ArrayList<Long> dna = p.parse(gbFile, sequence);
+			
 			//Each sequence will be passed to BTree as a new BTree Object, and handled there
-						
-		
+			
+			//TODO debug level 1
 		}
 		catch(FileNotFoundException fnfe){
 			system.out.println("Genebank File Not Found: Program Terminated.");
@@ -84,10 +86,11 @@ public class GeneBankCreateBTree {
 
 
 
-	public static <T> void cachedBTree(){
+	public static <T> void cachedBTree() {
 	
 	//This will, more or less, be the same as the above. Will update once we've discussed cache implementation.	
-	 	int degree = Integer.parseInt(args[1]);
+	 	
+		int degree = Integer.parseInt(args[1]);
         String gbName = args[2];
         int sequence = Integer.parseInt(args[3]);
         int cacheSize = Integer.parseInt(args[4]); 
@@ -120,13 +123,13 @@ public class GeneBankCreateBTree {
             exit(1);
         }
 
-        //create BTree here
         BTree tree = new BTree(degree, sequence);
 
         try {
-            File gbFile = new File(gbName); // TODO double check that this is working.
+            File gbFile = new File(gbName);
             //here is where parsing takes place
-            //Each sequence will be passed to BTree as a new BTree Object, and handled there	
-	}
-						
+
+           	//Each sequence will be passed to BTree as a new BTree Object, and handled there	
+			//TODO debug level 1
+		}						
 }
