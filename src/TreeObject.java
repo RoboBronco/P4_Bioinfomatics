@@ -1,19 +1,15 @@
-public class TreeObject {
+import java.nio.ByteBuffer;
 
-	private long key;
+public class TreeObject{
+	private Long key;
 	private int frequency;
-	
-	public TreeObject(){
-		this.key = 0;
-		this.frequency = 0;
-	}
-	
-	public TreeObject(long key){
+
+	public TreeObject(long key) {
 		this.key = key;
 		this.frequency = 1;
 	}
 	
-	public long getKey(){
+	public Long getKey(){
 		return this.key;
 	}
 	
@@ -21,8 +17,17 @@ public class TreeObject {
 		return this.frequency;
 	}
 	
-	public void increaseFrequency(){
+	public void increaseFrequency() {
 		this.frequency++;
 	}
 
+	public TreeObject(ByteBuffer b){
+		key = b.getLong();
+		frequency = b.getInt();
+	}
+
+	@Override
+	public String toString() {
+		return "Key: " + key + ", Frequency: " + frequency;
+	}
 }

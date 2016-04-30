@@ -1,75 +1,176 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.Random;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
 
-/**
- * Created by pkannah on 4/22/16.
- * Working project: P4_Bioinfomatics.
- */
 public class TreeWriter {
-    int seqLength;
-    private RandomAccessFile fOut;
-    private File file;
-    int[] array = new int[400];
-    //Creates the file based on the specified name and length
-    public TreeWriter(String filename) {
-        Random rand = new Random();
+    public static final int INT = 4, LONG = 8, BOOLEAN = 4;
+    public static final int META_DATA = INT * 3;
+    private RandomAccessFile outfile;
+    private int degree, length;
 
-        for (int i = 0; i <array.length ; i++) {
-            array[i] = rand.nextInt(100) + 1;
-        }
-        file = new File(filename);
+    public TreeWriter(String fileName, int degree, int seqLength) {
+        length = seqLength;
+        this.degree = degree;
+
         try {
-            fOut = new RandomAccessFile(filename, "rwd"); //everyupdate to the file is also written to disk
-            //TODO write metadata
+            outfile = new RandomAccessFile(new File((fileName)), "rw");
+            System.out.println("SIZE: " +outfile.length());
+        } catch (IOException e){}
+    }
 
-            for(int i = 0; i < array.length; i++) {
-               fOut.write(array[i]);
+    public long getLength() throws IOException{return outfile.length();}
+
+
+    public BTreeNode diskRead(int index, int degree) throws  IOException {
+        int numKeys;
+        BTreeNode temp = new BTreeNode(1, false, false, index);
+        temp.setDegree(degree);
+        temp.setIndex(index);
+        temp.setRoot(false);
+        temp.setMaxNumKeys((2 * degree) - 1);
+        ByteBuffer buff = ByteBuffer.allocate(4 + 4 + 4 + temp.getMaxNumKeys()
+                * (8 + 4) + (temp.getMaxNumKeys() + 1) * (4));
+
+        outfile.seek(getNodeOffSet(index));
+        outfile.read(buff.array());
+
+		// Read meta data
+        temp.setParent(buff.getInt());
+
+        if (buff.getInt() == 1) {
+            temp.setIsLeaf(true);
+        } else {
+            temp.setIsLeaf(false);
+        }
+        numKeys = buff.getInt();
+
+		/* Read keys */
+        temp.keys = new ArrayList<>(numKeys);
+
+        for (int k = 0; k < temp.getMaxNumKeys(); k++) {
+			/* Read in each key and store it in the list. */
+            if (k < numKeys) {
+                temp.keys.add(k, new TreeObject(buff));
             }
-//            fOut.write(10);fOut.write(140);fOut.write(120);fOut.write(2222);fOut.write(500);
-            fOut.close();
+			//Skip past each empty key
+            else {
+                buff.getLong();
+                buff.getInt();
+            }
         }
-        catch (IOException e) {
-            System.out.println("something up");
+        temp.children = new ArrayList<>(numKeys + 1);
+
+        if (!temp.isLeaf()) {
+            for (int c = 0; c < temp.getMaxNumKeys() + 1; c++) {
+				/* Read in each child and store it in the list. */
+                if (c < numKeys + 1) {
+                    temp.children.add(c, buff.getInt());
+                }
+                else
+                    buff.getInt();
+            }
         }
+        BTreeNode returnNode = temp;
+        if (temp != null)
+            diskWrite(temp, false);
+        return returnNode;
     }
 
-    public TreeWriter(File file) {
+    public void diskWrite(BTreeNode treeNode, boolean writeRoot) {
+        if (treeNode.isRoot() && !writeRoot) return;
+
+        ByteBuffer buff = ByteBuffer.allocate(4 + 4 + 4 + treeNode.getMaxNumKeys()
+                * (8 + 4) + (treeNode.getMaxNumKeys() + 1) * (4));
+//        ByteBuffer buff = ByteBuffer.allocate(
+//                META_DATA + treeNode.getMaxNumKeys() * (META_DATA) + (treeNode.getMaxNumKeys() + 1) * (INT));
         try {
-//            System.out.println("insdie of construct 2212312");
-            fOut = new RandomAccessFile(file, "rwd");
-            //TODO write metadata
-            fOut.write(7); //sequence length
-            fOut.write(4); //number of nodes, including root
-            //TODO write root
-            fOut.close();
+            outfile.seek(getNodeOffSet(treeNode.getNodeIndex()));
+        } catch (IOException e) {
         }
-        catch (IOException e) {
-            System.out.println("something is up");
+
+        buff.putInt(treeNode.getParentIndex());
+
+        if (treeNode.isLeaf())
+            buff.putInt(1);
+        else
+            buff.putInt(0);
+        buff.putInt(treeNode.keys.size());
+
+        //writing all keys in the node
+        for (int i = 0; i < treeNode.getMaxNumKeys(); i++) {
+            if (i < treeNode.keys.size()) {
+                //TODO get tree object in here
+                buff.putLong(treeNode.keys.get(i).getKey());
+                buff.putInt(treeNode.keys.get(i).getFrequency());
+            } else {
+                buff.putLong(-1);
+                buff.putInt(-1);
+            }
+        }
+
+        //writing children
+        for (int i = 0; i < treeNode.getMaxNumKeys() + 1; i++) {
+            if (i < treeNode.children.size()) {
+                buff.putInt(treeNode.children.get(i));
+            } else
+                buff.putInt(-1);
+        }
+
+        try {
+            outfile.write(buff.array());
+        } catch (IOException e) {}
+    }
+
+    public int getNodeSize() {
+        int numMaxKeys = (2 * degree) - 1;
+        int sizeOfMetaData = (INT * 2) + BOOLEAN;
+        int sizeOfKey = (12) * numMaxKeys;
+        int childSize = INT * (numMaxKeys + 1);
+        return sizeOfMetaData + sizeOfKey + childSize;
+    }
+
+    public int getNodeOffSet(int index) {
+        return META_DATA + (getNodeSize()) * index;
+    }
+
+    public void writeMetaData(int rootIndex) {
+        try {
+            outfile.seek(0L);
+            outfile.writeInt(degree);
+            outfile.writeInt(rootIndex);
+            outfile.writeInt(length);
+        } catch (IOException e) {
         }
     }
 
-    //TODO parameter should be a node not a TreeObject
-    public void writeToDisk(Object object) {
-
-    }
-
-    //TODO should return a BTreeNode (index?) instead of void
-    public void readFromDisk() throws IOException {
-        fOut = new RandomAccessFile(file, "rwd");
-        fOut.seek(350);
-        for(long i = fOut.getFilePointer();i < fOut.length(); i++) {
-            System.out.print(fOut.read() + " ");
+    public void flushTree(BTreeNode current, BTreeNode next, BTreeNode root) {
+//        TODO assert (root != null);
+        if (current != null) {
+            diskWrite(current, true);
         }
+        if (next != null)
+            diskWrite(next, true);
+
+        diskWrite(root, true);
+        writeMetaData(root.getNodeIndex());
     }
 
+    public RandomAccessFile getF(){return outfile;}
 
-    public static void main(String[] args) throws Exception {
-        TreeWriter writer = new TreeWriter("TREE_WRITER_TEST");
-//        TreeWriter writer1 = new TreeWriter("test1.gbk.btree.data.1");
+    public int readDegree() throws IOException {
+        outfile.seek(4L);
+        return outfile.readInt();
+    }
 
-        writer.readFromDisk();
+    public int readRootIndex() throws IOException {
+        outfile.seek(4L);
+        return outfile.readInt();
+    }
+
+    public int readSeqLength() throws IOException {
+        outfile.seek(8L);
+        return outfile.readInt();
     }
 }
