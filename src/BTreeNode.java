@@ -3,8 +3,8 @@ import java.util.ArrayList;
 public class BTreeNode {
     ArrayList<TreeObject> keys;
     ArrayList<Integer> children;
-    public static int NUM_NODES; //use to keep track of the total number of nodes
-    private int nodeIndex, parentIndex, maxNumKeys, degree;
+    static int NUM_NODES; //use to keep track of the total number of nodes
+    private int nodeIndex, parentIndex, maxKeyCount, degree;
     private boolean isRoot, isLeaf; //use to indicate if  a node is either a leaf and  root
 
     public BTreeNode(int degree, boolean isRoot, boolean isLeaf, int nodeIndex) {
@@ -13,17 +13,19 @@ public class BTreeNode {
         this.degree = degree;
         this.isRoot = isRoot;
 
-        if (isRoot()) parentIndex = -1;
+        if (isRoot()) {
+            parentIndex = -1;
+        }
 
-        maxNumKeys = ((degree * 2) - 1);
-        keys = new ArrayList<>(maxNumKeys);
-        children = new ArrayList<>(maxNumKeys + 1);
+        maxKeyCount = ((degree * 2) - 1);
+        keys = new ArrayList<>(maxKeyCount);
+        children = new ArrayList<>(maxKeyCount + 1);
 
         NUM_NODES++;
     }
 
     public boolean isFull() {
-        return keys.size() == maxNumKeys;
+        return keys.size() == maxKeyCount;
     }
 
     public void setIndex(int index){nodeIndex = index;}
@@ -40,15 +42,10 @@ public class BTreeNode {
         return nodeIndex;
     }
 
-    public int getMaxNumKeys() {
-        return maxNumKeys;
+    public int getMaxKeyCount() {
+        return maxKeyCount;
     }
 
-    public void setMaxNumKeys(int max){maxNumKeys = max;}
-
-    public void setDegree(int degree){
-        this.degree = degree;
-    }
 
     public void setParent(int parentIndex) {
         this.parentIndex = parentIndex;
@@ -66,9 +63,6 @@ public class BTreeNode {
         return parentIndex;
     }
 
-    public int getDegree() {
-        return degree;
-    }
 
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -81,21 +75,4 @@ public class BTreeNode {
         }
         return builder.toString();
     }
-
-//    private String walk(int depth){
-//        StringBuilder builder = new StringBuilder();
-//
-//        for (int i = 0; i < keys.size() ; i++) {
-//            if(!isLeaf()){
-////                builder.append(children.get(i).)
-//            }
-//            for (int j = 0; j < depth ; j++) {
-//
-//            }
-//        }
-//        if(!isLeaf()){
-//            builder.append()
-//        }
-//        return builder.toString();
-//    }
 }
