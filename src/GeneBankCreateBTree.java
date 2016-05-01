@@ -30,7 +30,6 @@ public class GeneBankCreateBTree {
             }
 	}
 
-		
 	public static <T> void cachelessBTree(String[] args) {
 		
 		int degree = Integer.parseInt(args[1]);
@@ -38,6 +37,9 @@ public class GeneBankCreateBTree {
 		int sequence = Integer.parseInt(args[3]);
 		int debug = 0;
 		
+		String genFileName = args[2];
+		genFileName += ".btree.data." + sequence + "." + degree;
+				
 		if (args.length == 5){ 
 			int temp = Integer.parseInt(args[4]);
             if (temp == 1){
@@ -65,14 +67,12 @@ public class GeneBankCreateBTree {
             System.exit(1);
 		}
 
- 
-
 		try {
 			Parser p = new Parser();
 			File gbFile = new File(gbName); 
 			ArrayList<Long> dna = p.parse(gbFile, sequence);
 			
-			BTree tree = new BTree(gbFile, degree, sequence);
+			BTree tree = new BTree(degree, sequence, genFileName, debug);
 
 			
 			//Each sequence will be passed to BTree as a new BTree Object, and handled there
@@ -81,8 +81,6 @@ public class GeneBankCreateBTree {
 				TreeObject obj = new TreeObject(dna.get(i));
 				tree.insert(obj);
 			}			
-			
-			//TODO debug level 1
 		}
 		catch(FileNotFoundException fnfe){
 			System.out.println("Genebank File Not Found: Program Terminated.");
@@ -93,9 +91,6 @@ public class GeneBankCreateBTree {
 		}		
 	
 	}
-
-
-
 
 	public static <T> void cachedBTree(String[] args) {
 	
@@ -142,7 +137,7 @@ public class GeneBankCreateBTree {
 
            	//Each sequence will be passed to BTree as a new BTree Object, and handled there	
 			//TODO debug level 1
-		}*/						
+		*/						
 
 	}
 }
