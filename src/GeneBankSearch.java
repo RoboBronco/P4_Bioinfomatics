@@ -56,6 +56,23 @@ public class GeneBankSearch
 			btreeFile = args[1];
 			queryFile = args[2];
 			
+			StringTokenizer st = new StringTokenizer(btreeFile, ".");
+			int count = st.countTokens();
+			String tokens[]= new String[count];
+			int j = 0;
+			while(j <= count){
+				while(st.hasMoreElements()) {
+					tokens[j] = st.nextToken();
+					j++;
+				}
+			j++;
+			}
+			
+			k = Integer.parseInt(tokens[count - 2]);
+			t = Integer.parseInt(tokens[count - 1]);
+			
+			System.out.println("k: " + k + " t: " + t  );
+			
 			if(args.length == 4){
 				cacheSize = Integer.parseInt(args[3]);
 			}
