@@ -6,9 +6,9 @@ public class BTree {
     BTreeNode root, current, next;
     private TreeWriter writer;
     private int degree, numNodes, seqLength;
-    private boolean debug;
+    private int debug;
 
-    public BTree(int degree, int length, String fileName, boolean debug)
+    public BTree(int degree, int length, String fileName, int debug)
     {
         this.degree = degree;
         seqLength = length;
@@ -24,7 +24,7 @@ public class BTree {
         numNodes = 1;
     }
 
-    public BTree(File bTreeFile, int degree, int seqLength, boolean debug) {
+    public BTree(File bTreeFile, int degree, int seqLength, int debug) {
         try {
             writer = new TreeWriter(bTreeFile.getName(), degree, seqLength);
         }catch (IOException ignored){}
@@ -51,14 +51,14 @@ public class BTree {
         if(parent.isFull() || !nodeToSplit.isFull())
             throw new IllegalStateException();
 
-        if(debug)
+        if(debug == 0)
             System.out.println("Child split with parent node " + parent.getNodeIndex() + ", split indexes: " +
                 nodeToSplit.getNodeIndex() +" & " + index);
 
         BTreeNode newChild = new BTreeNode(degree, false, nodeToSplit.isLeaf(), numNodes);
         numNodes++;
 
-        if(debug)
+        if(debug == 0)
             System.out.println("New child node: " + newChild.getNodeIndex() + " -> Parent: " +parent.getNodeIndex());
 
         for (int p = nodeToSplit.keys.size() - 1; p > degree - 1; p--) {
@@ -99,7 +99,7 @@ public class BTree {
                         current.keys.get(index).increaseFrequency();
                         writer.diskWrite(current, false);
                         //TODO PRINT DEBUG INFO
-                        if(debug)
+                        if(debug == 0)
                             System.out.println("Seq: " +
                                 ConvertDNAToLong.convertFromLong(treeKey) + ", Freq: "
                                     + current.keys.get(index).getFrequency()
@@ -109,7 +109,7 @@ public class BTree {
                     index--;
                 }
                 current.keys.add(index + 1, o);
-                if(debug)
+                if(debug == 0)
                     System.out.println("Inserted " + ConvertDNAToLong.convertFromLong(treeKey) +
                  " at node " + current.getNodeIndex() );
 
@@ -126,7 +126,7 @@ public class BTree {
                         writer.diskWrite(current, false);
 
                         //TODO PRINT DEBUG INFO
-                        if(debug)
+                        if(debug == 0)
                             System.out.println("Seq: " +
                                     ConvertDNAToLong.convertFromLong(treeKey) + ", Freq: " +
                                     current.keys.get(index).getFrequency()
@@ -146,7 +146,7 @@ public class BTree {
                         current.keys.get(index).increaseFrequency();
                         writer.diskWrite(current, false);
                         //TODO PRINT DEBUG INFO
-                        if(debug)
+                        if(debug == 0)
                             System.out.println("Seq: " +
                                     ConvertDNAToLong.convertFromLong(treeKey) + ", Freq: " +
                                     current.keys.get(index).getFrequency()
@@ -170,7 +170,7 @@ public class BTree {
             next.setParent(root.getNodeIndex());
             next.setRoot(false);
 
-            if(debug)
+            if(debug == 0)
                 System.out.println("New root node: " + root.getNodeIndex());
 
             splitChild(root, next, 0);
@@ -276,13 +276,14 @@ public class BTree {
     }
 
     public static void main(String[] args) throws IOException {
-        BTree tree = new BTree(3, 10, "TEST", true);
+        BTree tree = new BTree(3, 10, "TEST", 0);
         Parser p = new Parser();
-        ArrayList<Long> nums = p.parse(new File("test5.gbk"),10);
+        ArrayList<Long> nums = p.parse(new File("test1.gbk"),10);
 
         for (int i = 0; i < nums.size() ; i++) {
             tree.insert(new TreeObject(nums.get(i)));
         }
+
         tree.writeTree();
         tree.writeDumpFile();
 
@@ -291,5 +292,7 @@ public class BTree {
         TreeObject result = tree.search(t);
 
         System.out.println("\nRESULT: " + result);
+
+
     }
 }
