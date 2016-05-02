@@ -13,9 +13,11 @@ public class BTree {
         if (degree == 0)
             this.degree = optimalDegree();
 
+        this.degree = degree;
+
         seqLength = length;
         this.debug = debug;
-        fName = fileName.substring(0,fileName.indexOf('k')+1);
+        fName = fileName.substring(0, fileName.indexOf('k')+1);
         File f = new File(fileName);
         f.delete();
 
@@ -57,7 +59,7 @@ public class BTree {
 
         if(debug == 0)
             System.out.println("Child split with parent node " + parent.getNodeIndex() + ", split indexes: " +
-                nodeToSplit.getNodeIndex() +" & " + index);
+                    nodeToSplit.getNodeIndex() +" & " + index);
 
         BTreeNode newChild = new BTreeNode(degree, false, nodeToSplit.isLeaf(), numNodes);
         numNodes++;
@@ -104,9 +106,9 @@ public class BTree {
                         writer.diskWrite(current, false);
                         if(debug == 0)
                             System.out.println("Seq: " +
-                                ConvertDNAToLong.convertFromLong(treeKey) + ", Freq: "
+                                    ConvertDNAToLong.convertFromLong(treeKey) + ", Freq: "
                                     + current.keys.get(index).getFrequency()
-                                + ", Node: " + current.getNodeIndex());
+                                    + ", Node: " + current.getNodeIndex());
                         return;
                     }
                     index--;
@@ -114,7 +116,7 @@ public class BTree {
                 current.keys.add(index + 1, o);
                 if(debug == 0)
                     System.out.println("Inserted " + ConvertDNAToLong.convertFromLong(treeKey) +
-                 " at node " + current.getNodeIndex() );
+                            " at node " + current.getNodeIndex() );
 
                 writer.diskWrite(current, false);
                 break;
@@ -229,7 +231,7 @@ public class BTree {
         int childIndex = 0;
 
         outStream.write("BTree Info:\n----------\nDegree: " + degree + "\nSequence length: " + seqLength
-        + "\nGenebank file: " + fName + "\n\n");
+                + "\nGenebank file: " + fName + "\n\n");
 
         while (traversing)
         {
