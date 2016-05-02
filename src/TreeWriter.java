@@ -8,7 +8,7 @@ public class TreeWriter {
     static final int INT = 4, BOOLEAN = 4;
     static final int META_DATA = INT * 3;
     private RandomAccessFile outfile;
-    private int degree, length;
+    static int degree, length;
 
     public TreeWriter(String fileName, int degree, int seqLength) throws FileNotFoundException {
         this.degree = degree;
@@ -113,7 +113,15 @@ public class TreeWriter {
 
     }
 
-    public int getNodeSize() {
+    public static int getNodeSize() {
+        int numMaxKeys = 2 * degree - 1;
+        int sizeOfMetaData = (INT * 2) + BOOLEAN;
+        int sizeOfKey = 12 * (numMaxKeys);
+        int childSize = INT * (numMaxKeys + 1);
+        return (sizeOfMetaData + sizeOfKey + childSize);
+    }
+
+    public static int getNodeSize(int degree) {
         int numMaxKeys = 2 * degree - 1;
         int sizeOfMetaData = (INT * 2) + BOOLEAN;
         int sizeOfKey = 12 * (numMaxKeys);
