@@ -1,12 +1,9 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class GeneBankCreateBTree {
     public static void main (String[] args){
-
-
         if (args.length < 4 || args.length > 6 ){
             //print usage
             System.out.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
@@ -20,7 +17,7 @@ public class GeneBankCreateBTree {
             else if (Integer.parseInt(args[0]) == 1){
                 cachedBTree(args);
             }
-            else{
+            else {
                 System.out.println("First argument must be a 0 or 1 to determine if cache is used");
                 System.out.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
                 System.out.println("[<cache size>] should only be specified if you are using a cache.");
@@ -46,11 +43,6 @@ public class GeneBankCreateBTree {
                 debug = 1;
             }
 
-        }
-
-        if (degree == 0){
-            System.out.println("Degree of zero specified. Generating optimal degree based on disc size");
-            degree = OptimalDegreeGenerator.generate();
         }
 
         if (sequence < 1){
@@ -84,12 +76,8 @@ public class GeneBankCreateBTree {
             tree.writeTree();
             if (debug == 1)
                 tree.writeDumpFile();
-        }
-        catch(FileNotFoundException fnfe){
-            System.out.println("Genebank File Not Found: Program Terminated.");
-            System.exit(1);
-        }catch(IOException e){
-            System.out.println("Genebank File Not Found: Program Terminated.");
+        } catch(IOException e){
+            System.err.println("Genebank File Not Found: Program Terminated.");
             System.exit(1);
         }
 
@@ -111,12 +99,6 @@ public class GeneBankCreateBTree {
 				debug = 1;
 			}
 		}
-
-        if (degree == 0){
-        //generate opitmal degree
-        system.out.println("Generating optimal degree based on disc size");
-        degree = OptimalDegreeGenerator.generate();
-        }
 
         if (!sequence >= 1){
             System.out.println("specified sequence is too short, or is negative");
