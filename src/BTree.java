@@ -10,7 +10,9 @@ public class BTree {
 
     public BTree(int degree, int length, String fileName, int debug)
     {
-        this.degree = degree;
+        if (degree == 0)
+            this.degree = optimalDegree();
+
         seqLength = length;
         this.debug = debug;
         fName = fileName.substring(0,fileName.indexOf('k')+1);
@@ -281,5 +283,22 @@ public class BTree {
             }
         }
         outStream.close();
+    }
+
+
+    public int optimalDegree(){
+        int dbSize = 4096;
+        int fineD = 0;
+        int nodeSize = 0;
+
+        while (nodeSize <= dbSize) {
+            nodeSize = TreeWriter.getNodeSize(++fineD);
+        }
+
+        fineD--;
+        if (debug == 0)
+            System.out.println("An optimal degree of " + fineD + " has been found");
+
+        return fineD;
     }
 }
