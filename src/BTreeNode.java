@@ -3,25 +3,22 @@ import java.util.ArrayList;
 public class BTreeNode {
     ArrayList<TreeObject> keys;
     ArrayList<Integer> children;
-    static int NUM_NODES; //use to keep track of the total number of nodes
-    private int nodeIndex, parentIndex, maxKeyCount, degree;
+    private int nodeIndex, parentIndex;
+    public  int maxKeyCount;
     private boolean isRoot, isLeaf; //use to indicate if  a node is either a leaf and  root
 
     public BTreeNode(int degree, boolean isRoot, boolean isLeaf, int nodeIndex) {
         this.nodeIndex = nodeIndex;
         this.isLeaf = isLeaf;
-        this.degree = degree;
         this.isRoot = isRoot;
 
         if (isRoot()) {
             parentIndex = -1;
         }
 
-        maxKeyCount = ((degree * 2) - 1);
+        maxKeyCount = (2 * degree) - 1;
         keys = new ArrayList<>(maxKeyCount);
         children = new ArrayList<>(maxKeyCount + 1);
-
-        NUM_NODES++;
     }
 
     public boolean isFull() {
