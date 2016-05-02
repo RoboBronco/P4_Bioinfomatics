@@ -3,10 +3,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TreeWriter {
-    static final int INT = 4, LONG = 8, BOOLEAN = 4;
+    static final int INT = 4, BOOLEAN = 4;
     static final int META_DATA = INT * 3;
     private RandomAccessFile outfile;
     private int degree, length;
@@ -21,18 +20,15 @@ public class TreeWriter {
         int numKeys;
         BTreeNode temp = new BTreeNode(degree, false, false, index);
 
-//        temp.setDegree(degree);
-//        temp.setIndex(index);
-//        temp.setRoot(false);
-//        temp.setMaxKeyCount((2 * degree) - 1);
-
-    ByteBuffer buff = ByteBuffer.allocate(4 + 4 + 4 + temp.getMaxKeyCount() * (8 + 4) + (temp.getMaxKeyCount() + 1) * (4));
+        ByteBuffer buff = ByteBuffer.allocate(4 + 4 + 4 + temp.maxKeyCount
+                * (8 + 4) + (temp.maxKeyCount + 1) * (4));
 
         outfile.seek(getNodeOffSet(index));
         outfile.read(buff.array());
 
         // Read meta data
         temp.setParent(buff.getInt());
+        temp.maxKeyCount = 2 * degree - 1;
 
         if (buff.getInt() == 1) {
             temp.setIsLeaf(true);
@@ -44,8 +40,8 @@ public class TreeWriter {
 		/* Read keys */
         temp.keys = new ArrayList<>(numKeys);
 
-        for (int k = 0; k < temp.getMaxKeyCount(); k++) {
-			/* Read in each key and store it in the list. */
+        for (int k = 0; k < temp.maxKeyCount; k++) {
+			//read each key into the node
             if (k < numKeys) {
                 temp.keys.add(k, new TreeObject(buff));
             }
@@ -59,7 +55,7 @@ public class TreeWriter {
 
         if (!temp.isLeaf()) {
             for (int c = 0; c < temp.getMaxKeyCount() + 1; c++) {
-				/* Read in each child and store it in the list. */
+				//read each child index into the node
                 if (c < numKeys + 1) {
                     temp.children.add(c, buff.getInt());
                 }
@@ -69,7 +65,7 @@ public class TreeWriter {
         }
         BTreeNode returnNode = temp;
 
-        if (temp != null)
+//        if (temp != null)
             diskWrite(temp, false);
         return returnNode;
     }
@@ -90,11 +86,14 @@ public class TreeWriter {
             buff.putInt(1);
         else
             buff.putInt(0);
+
         buff.putInt(treeNode.keys.size());
 
         //writing all keys in the node
-        for (int i = 0; i < treeNode.getMaxKeyCount(); i++) {
-            if (i < treeNode.keys.size()) {
+        for (int i = 0; i < treeNode.maxKeyCount; i++)
+        {
+            if (i < treeNode.keys.size())
+            {
                 buff.putLong(treeNode.keys.get(i).getKey());
                 buff.putInt(treeNode.keys.get(i).getFrequency());
             } else {
@@ -117,7 +116,7 @@ public class TreeWriter {
     public int getNodeSize() {
         int numMaxKeys = 2 * degree - 1;
         int sizeOfMetaData = (INT * 2) + BOOLEAN;
-        int sizeOfKey = 12 * numMaxKeys;
+        int sizeOfKey = 12 * (numMaxKeys);
         int childSize = INT * (numMaxKeys + 1);
         return (sizeOfMetaData + sizeOfKey + childSize);
     }
@@ -132,19 +131,20 @@ public class TreeWriter {
             outfile.writeInt(degree);
             outfile.writeInt(rootIndex);
             outfile.writeInt(seqLength);
-        } catch (IOException e) {}
+        } catch (IOException ignore) {}
     }
 
     public void flushTree(BTreeNode current, BTreeNode next, BTreeNode root)  throws IOException {
-//        TODO assert (root != null);
+        int rootIndex = root.getNodeIndex();
         if (current != null) {
             diskWrite(current, true);
         }
+
         if (next != null)
             diskWrite(next, true);
 
         diskWrite(root, true);
-        writeMetaData(root.getNodeIndex(),degree,length);
+        writeMetaData(degree,rootIndex,length);
     }
 
     public int readDegree() throws IOException {
