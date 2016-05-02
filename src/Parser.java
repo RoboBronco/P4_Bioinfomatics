@@ -60,11 +60,12 @@ public class Parser extends ConvertDNAToLong {
         ArrayList<Long> longArray = new ArrayList<Long>();
         current = newSec;
         String respekOnMyName;
-        while(current != "" && !(current.length() < offSetNum)){
-            respekOnMyName = current.substring(0, offSetNum);
+        while(current != "" && !(current.length() < offSetNum)) {
+            respekOnMyName = current.substring(0, offSetNum).toUpperCase();
             current = current.substring(offSetNum - (offSetNum - 1), current.length());
 
-            if (!respekOnMyName.contains("N") &&!respekOnMyName.contains("n") && !respekOnMyName.contains("O") && !respekOnMyName.contains("I")){
+            if (!respekOnMyName.contains("N") && !respekOnMyName.contains("O") && !respekOnMyName.contains("I") &&
+                    !respekOnMyName.contains("R")){
                     longArray.add(convertToLong(respekOnMyName));
             }
         }
