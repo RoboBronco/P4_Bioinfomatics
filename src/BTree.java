@@ -8,13 +8,12 @@ public class BTree {
     private int debug;
     String fName;
 
-    public BTree(int degree, int length, String fileName, int debug)
+    public BTree(int degree, int length, String fileName, int debug, int cacheSize)
     {
         if (degree == 0)
             this.degree = optimalDegree();
 
         this.degree = degree;
-
         seqLength = length;
         this.debug = debug;
         fName = fileName.substring(0, fileName.indexOf('k')+1);
@@ -22,16 +21,16 @@ public class BTree {
         f.delete();
 
         try {
-            writer = new TreeWriter(fileName, this.degree, this.seqLength); //setup file to write to
+            writer = new TreeWriter(fileName, this.degree, this.seqLength, cacheSize); //setup file to write to
         }catch (IOException ignored){}
 
         root = new BTreeNode(this.degree, true, true, 0);
         numNodes = 1;
     }
 
-    public BTree(File bTreeFile, int degree, int seqLength, int debug) {
+    public BTree(File bTreeFile, int degree, int seqLength, int debug, int cacheSize) {
         try {
-            writer = new TreeWriter(bTreeFile.getName(), degree, seqLength);
+            writer = new TreeWriter(bTreeFile.getName(), degree, seqLength, cacheSize);
         }catch (IOException ignored){}
 
         this.debug = debug;
@@ -288,7 +287,7 @@ public class BTree {
     }
 
 
-    public int optimalDegree(){
+    public int optimalDegree() {
         int dbSize = 4096;
         int fineD = 0;
         int nodeSize = 0;
@@ -300,7 +299,6 @@ public class BTree {
         fineD--;
         if (debug == 0)
             System.out.println("An optimal degree of " + fineD + " has been found");
-
         return fineD;
     }
 }
