@@ -108,7 +108,7 @@ public class GeneBankSearch
 
     private static void printUsage()
     {
-        System.out.println("Usage:\n\t" +
+        System.err.println("Usage:\n\t" +
                 "<0/1(no/with Cache)> <btree file> <query file> [<cache size>] " +
                 "[<debug level>]");
     }
