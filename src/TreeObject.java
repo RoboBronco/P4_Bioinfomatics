@@ -33,7 +33,7 @@ public class TreeObject {
 
 	@Override
 	public String toString() {
-		return "Sequence: " + ConvertDNAToLong.convertFromLong(key) + ", Frequency: " + frequency;
+		return "Frequency: " + frequency + ", Sequence: " + ConvertDNAToLong.convertFromLong(key);
 	}
 
 }
