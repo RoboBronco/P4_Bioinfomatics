@@ -1,12 +1,13 @@
 import java.io.*;
 import java.util.Stack;
 
+@SuppressWarnings ("WeakerAccess")
 public class BTree {
-    BTreeNode root, current, next;
+    private BTreeNode root, current, next;
     private TreeWriter writer;
     private int degree, numNodes, seqLength;
     private int debug;
-    String fName;
+    private String fName;
 
     public BTree(int degree, int length, String fileName, int debug, int cacheSize)
     {
@@ -18,6 +19,7 @@ public class BTree {
         this.debug = debug;
         fName = fileName.substring(0, fileName.indexOf('k')+1);
         File f = new File(fileName);
+        //noinspection ResultOfMethodCallIgnored
         f.delete();
 
         try {
@@ -57,14 +59,14 @@ public class BTree {
             throw new IllegalStateException();
 
         if(debug == 0)
-            System.out.println("Child split with parent node " + parent.getNodeIndex() + ", split indexes: " +
+            System.err.println("Child split with parent node " + parent.getNodeIndex() + ", split at: " +
                     nodeToSplit.getNodeIndex() +" & " + index);
 
         BTreeNode newChild = new BTreeNode(degree, false, nodeToSplit.isLeaf(), numNodes);
         numNodes++;
 
         if(debug == 0)
-            System.out.println("New child node: " + newChild.getNodeIndex() + " -> Parent: " +parent.getNodeIndex());
+            System.err.println("New child node: " + newChild.getNodeIndex() + " -> Parent: " +parent.getNodeIndex());
 
         for (int p = nodeToSplit.keys.size() - 1; p > degree - 1; p--) {
             newChild.keys.add(0, nodeToSplit.keys.remove(p));
@@ -104,7 +106,7 @@ public class BTree {
                         current.keys.get(index).increaseFrequency();
                         writer.diskWrite(current, false);
                         if(debug == 0)
-                            System.out.println("Seq: " +
+                            System.err.println("Seq: " +
                                     ConvertDNAToLong.convertFromLong(treeKey) + ", Freq: "
                                     + current.keys.get(index).getFrequency()
                                     + ", Node: " + current.getNodeIndex());
@@ -114,7 +116,7 @@ public class BTree {
                 }
                 current.keys.add(index + 1, o);
                 if(debug == 0)
-                    System.out.println("Inserted " + ConvertDNAToLong.convertFromLong(treeKey) +
+                    System.err.println("Inserted " + ConvertDNAToLong.convertFromLong(treeKey) +
                             " at node " + current.getNodeIndex() );
 
                 writer.diskWrite(current, false);
@@ -130,7 +132,7 @@ public class BTree {
                         writer.diskWrite(current, false);
 
                         if(debug == 0)
-                            System.out.println("Seq: " +
+                            System.err.println("Seq: " +
                                     ConvertDNAToLong.convertFromLong(treeKey) + ", Freq: " +
                                     current.keys.get(index).getFrequency()
                                     + ", Node: " + current.getNodeIndex());
@@ -149,7 +151,7 @@ public class BTree {
                         current.keys.get(index).increaseFrequency();
                         writer.diskWrite(current, false);
                         if(debug == 0)
-                            System.out.println("Seq: " +
+                            System.err.println("Seq: " +
                                     ConvertDNAToLong.convertFromLong(treeKey) + ", Freq: " +
                                     current.keys.get(index).getFrequency()
                                     + ", Node: " + current.getNodeIndex());
@@ -173,7 +175,7 @@ public class BTree {
             next.setRoot(false);
 
             if(debug == 0)
-                System.out.println("New root node: " + root.getNodeIndex());
+                System.err.println("New root node: " + root.getNodeIndex());
 
             splitChild(root, next, 0);
             insertNonfull(o);
@@ -184,10 +186,8 @@ public class BTree {
     private int nodeSearch(BTreeNode node, TreeObject searchKey)
             throws IOException {
         current = node;
-        boolean search = true;
         Long key = searchKey.getKey();
-
-        while (search) {
+        while (true) {
             int i = 0;
             while (i < current.keys.size()
                     && key.compareTo(current.keys.get(i).getKey()) > 0){
@@ -206,7 +206,6 @@ public class BTree {
                 current = writer.diskRead(current.children.get(i), degree);
             }
         }
-        return -1;
     }
 
     public void writeTree() {
@@ -286,8 +285,7 @@ public class BTree {
         outStream.close();
     }
 
-
-    public int optimalDegree() {
+    private int optimalDegree() {
         int dbSize = 4096;
         int fineD = 0;
         int nodeSize = 0;
