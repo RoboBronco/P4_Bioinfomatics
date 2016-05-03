@@ -21,7 +21,6 @@ public class GeneBankSearch
             System.exit(1);
         }
 
-
         if((Integer.parseInt(args[0]) == 0)){
             btreeFile = args[1];
             queryFile = args[2];
@@ -79,7 +78,7 @@ public class GeneBankSearch
 
         try
         {
-            btree = new BTree(new File(btreeFile), t, k, debug);
+            btree = new BTree(new File(btreeFile), t, k, debug,cacheSize);
             scan = new Scanner(new FileReader(queryFile));
 
             System.out.println("Sequence | Frequency\n--------------------");
@@ -109,7 +108,8 @@ public class GeneBankSearch
 
     private static void printUsage()
     {
-        System.out.println("Usage...");
+        System.out.println("Usage:\n\t" +
+                "<0/1(no/with Cache)> <btree file> <query file> [<cache size>] " +
+                "[<debug level>]");
     }
-
 }
