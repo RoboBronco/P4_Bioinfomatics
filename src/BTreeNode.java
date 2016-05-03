@@ -1,16 +1,18 @@
 import java.util.ArrayList;
 
-public class BTreeNode {
+public class BTreeNode implements Comparable<BTreeNode>{
     ArrayList<TreeObject> keys;
     ArrayList<Integer> children;
-    private int nodeIndex, parentIndex;
-    public  int maxKeyCount;
-    private boolean isRoot, isLeaf; //use to indicate if  a node is either a leaf and  root
+    int nodeIndex, parentIndex;
+    int maxKeyCount, degree;
+    boolean isRoot, isLeaf; //use to indicate if  a node is either a leaf and  root
+
 
     public BTreeNode(int degree, boolean isRoot, boolean isLeaf, int nodeIndex) {
         this.nodeIndex = nodeIndex;
         this.isLeaf = isLeaf;
         this.isRoot = isRoot;
+        this.degree  = degree;
 
         if (isRoot()) {
             parentIndex = -1;
@@ -71,5 +73,10 @@ public class BTreeNode {
             builder.append(keys.get(i));
         }
         return builder.toString();
+    }
+
+    @Override
+    public int compareTo(BTreeNode o){
+        return nodeIndex - o.nodeIndex;
     }
 }
