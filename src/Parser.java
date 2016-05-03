@@ -4,10 +4,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
 
-/**
- * @author Jayden Weaver
- * Parses dna string from text files.
- */
 @SuppressWarnings ("WeakerAccess")
 public class Parser extends ConvertDNAToLong {
 
