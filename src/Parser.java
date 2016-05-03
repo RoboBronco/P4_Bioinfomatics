@@ -21,7 +21,7 @@ public class Parser extends ConvertDNAToLong {
             this.scan = new Scanner(file);
             this.realScanner = new Scanner(file);
         } catch (FileNotFoundException e) {
-            System.out.println("lel. file not found.");
+            System.err.println("File not found");
         }
         this.offSetNum = offSet;
         return parseIt();
