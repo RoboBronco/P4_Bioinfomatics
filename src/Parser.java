@@ -1,12 +1,10 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
-/**
- * @author Jayden Weaver
- * Parses dna string from text files.
- */
+@SuppressWarnings ("WeakerAccess")
 public class Parser extends ConvertDNAToLong {
 
     private Scanner scan, realScanner;
@@ -23,7 +21,7 @@ public class Parser extends ConvertDNAToLong {
             this.scan = new Scanner(file);
             this.realScanner = new Scanner(file);
         } catch (FileNotFoundException e) {
-            System.out.println("lel. file not found.");
+            System.err.println("File not found");
         }
         this.offSetNum = offSet;
         return parseIt();
@@ -57,14 +55,15 @@ public class Parser extends ConvertDNAToLong {
             }
         }
 
-        ArrayList<Long> longArray = new ArrayList<Long>();
+        ArrayList<Long> longArray = new ArrayList<>();
         current = newSec;
         String respekOnMyName;
-        while(current != "" && !(current.length() < offSetNum)){
-            respekOnMyName = current.substring(0, offSetNum);
+        while(!Objects.equals(current, "") && !(current.length() < offSetNum)) {
+            respekOnMyName = current.substring(0, offSetNum).toUpperCase();
             current = current.substring(offSetNum - (offSetNum - 1), current.length());
 
-            if (!respekOnMyName.contains("N") &&!respekOnMyName.contains("n") && !respekOnMyName.contains("O") && !respekOnMyName.contains("I")){
+            if (!respekOnMyName.contains("N") && !respekOnMyName.contains("O") && !respekOnMyName.contains("I") &&
+                    !respekOnMyName.contains("R")){
                     longArray.add(convertToLong(respekOnMyName));
             }
         }
