@@ -286,7 +286,7 @@ public class BTree {
     }
 
     private int optimalDegree() {
-        int dbSize = 4096;
+        /*int dbSize = 4096;
         int fineD = 0;
         int nodeSize = 0;
 
@@ -298,5 +298,17 @@ public class BTree {
         if (debug == 0)
             System.out.println("An optimal degree of " + fineD + " has been found");
         return fineD;
-    }
+    }*/
+		
+
+	
+		int dbSize = 4096;
+        int nodeSize = 32;      //2int + 2 boolean
+        int pointerSize = 4;    //int 
+        int metadata = nodeSize; //2int + 2bool
+
+        //value for degree is truncated, okay as optimal degree <= actual value
+
+        int degree = (dbSize - metadata) / (2*nodeSize + 2*pointerSize);
+        return degree;
 }
