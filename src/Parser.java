@@ -16,7 +16,7 @@ public class Parser extends ConvertDNAToLong {
      * @param file
      * @return longArray
      */
-    public ArrayList<Long> parse(File file, int offSet){
+    public ArrayList<Long> parse(File file, int offSet) {
         try {
             this.scan = new Scanner(file);
             this.realScanner = new Scanner(file);
@@ -31,18 +31,18 @@ public class Parser extends ConvertDNAToLong {
      * Does actual parsing of file. Returns ArrayList of longs to parent method.
      * @return longArray
      */
-    private ArrayList<Long> parseIt(){
+    private ArrayList<Long> parseIt() {
         String current = "";
         String section = "";
         //get to the DNA part...
-        while(!current.equals("ORIGIN      ")){
+        while(!current.equals("ORIGIN      ") && scan.hasNextLine()){
             current = scan.nextLine();
             section = realScanner.nextLine();
         }
         //get dna section.
         char currentChar = ' ';
 
-        while (!current.equals("//")){
+        while (!current.equals("//") && realScanner.hasNextLine()){
             section += realScanner.nextLine();
             current = scan.nextLine();
         }
