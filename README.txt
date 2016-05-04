@@ -10,7 +10,13 @@
 
 OVERVIEW:
 
-This program implements a B-tree data structure and uses it to store DNA sequences of a specified length read from a GeneBank file in order to determine the frequency of particular subsequences. The resulting B-tree is created and written to a binary file with the GeneBankCreateBTree program. The generated binary file can be searched using the GeneBankSearch program to compare sequences of length k from a query file to sequences stored in the B-tree file.
+This program implements a B-tree data structure and uses it to store 
+DNA sequences of a specified length read from a GeneBank file in order to 
+determine the frequency of particular subsequences. The resulting B-tree 
+is created and written to a binary file with the GeneBankCreateBTree program. 
+The generated binary file can be searched using the GeneBankSearch program 
+to compare sequences of length k from a query file to sequences stored 
+in the B-tree file.
 
 INCLUDED FILES:
 
@@ -18,13 +24,17 @@ INCLUDED FILES:
 
  * BTreeNode.java - source file - Used to model nodes of a B-tree
 
- * ConvertDnaToLong.java - source file - Class to generate a key from the DNA sequence strings
+ * ConvertDnaToLong.java - source file - Class to generate a key from the DNA 
+sequence strings
 
- * GeneBankCreateBTree.java - source file - Driver class that creates B-tree file
+ * GeneBankCreateBTree.java - source file - Driver class that creates B-tree 
+file
 
- * GeneBankSearch.java - source file - Driver class that searches B-tree using query file
+ * GeneBankSearch.java - source file - Driver class that searches B-tree using 
+query file
 
- * OptimalDegreeGenerator.java - source file - Generates optimal degree for B-tree
+ * OptimalDegreeGenerator.java - source file - Generates optimal degree for 
+B-tree
 
  * Parser.java - source file - Parses GeneBank file for DNA sequences
 
@@ -37,13 +47,15 @@ INCLUDED FILES:
 
 COMPILING AND RUNNING:
  
- From the directory containing all source files, compile program (and all dependencies) with the command:
+ From the directory containing all source files, compile program 
+(and all dependencies) with the command:
 
  $ javac *.java
 
  OR
 
- From the directory containing the makefile, compile the program with the command:
+ From the directory containing the makefile, compile the program with 
+the command:
  
  $ make build
 
@@ -56,11 +68,25 @@ COMPILING AND RUNNING:
 
 PROGRAM DESIGN:
 
-The core of the program is the BTree class, which implements a B-tree data structure made up of BTreeNodes. Each BTreeNode contains some metadata (including the maximum number of keys allowable and 2 boolean variables to flag whether the node is the root or a leaf), an array list of TreeObjects, and an array list of child pointers which are integer offsets. The BTree class includes methods to insert objects into the B-tree, to split a node when needed, and to write the B-tree to a file. This class has two constructors, one to create a new B-tree and prepare to write it to a file, and another that is able to access an existing B-tree file to use its contents.
+The core of the program is the BTree class, which implements a B-tree data 
+structure made up of BTreeNodes. Each BTreeNode contains some metadata (including the maximum number of keys allowable and 2 boolean variables to flag whether 
+the node is the root or a leaf), an array list of TreeObjects, and an array list 
+of child pointers which are integer offsets. The BTree class includes methods to insert objects into the B-tree, to split a node when needed, and to write the 
+B-tree to a file. This class has two constructors, one to create a new B-tree 
+and prepare to write it to a file, and another that is able to access an 
+existing B-tree file to use its contents.
 
-The TreeObject class models the individual objects stored in each node of the B-tree. Each TreeObject contains a key and a frequency. The key is derived from the DNA sequence that is read in by the Parser class and converted to a long data type binary representation. 
+The TreeObject class models the individual objects stored in each node of 
+the B-tree. Each TreeObject contains a key and a frequency. The key is derived 
+from the DNA sequence that is read in by the Parser class and converted to a 
+long data type binary representation. 
 
-Each time the B-tree is written to a file, the metadata (consisting of 20 bytes) is written first, followed by all of the nodes of the B-tree. Each node contains 16 bytes of metadata, an array list of TreeObjects (12 bytes each, 8 bytes for the key + 4 bytes for the frequency) and an array list of integers (4 bytes) to represent the offset of the children in the form of indexes relating to each node. 
+Each time the B-tree is written to a file, the metadata (consisting of 20 bytes)
+ is written first, followed by all of the nodes of the B-tree. Each node 
+contains 16 bytes of metadata, an array list of TreeObjects (12 bytes each, 
+8 bytes for the key + 4 bytes for the frequency) and an array list of 
+integers (4 bytes) to represent the offset of the children in the form 
+of indexes relating to each node. 
 
 
 TESTING:
