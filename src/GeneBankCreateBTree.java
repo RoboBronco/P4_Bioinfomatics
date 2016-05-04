@@ -24,6 +24,7 @@ public class GeneBankCreateBTree {
                 System.err.println("[<cache size>] should only be specified if you are using a cache.");
                 exit(1);
             }
+
         }
     }
 
@@ -36,7 +37,8 @@ public class GeneBankCreateBTree {
         int debug = 0;
 
         String genFileName = args[2];
-        genFileName += ".btree.data." + sequence + "." + degree;
+        if(degree == 0)
+            genFileName += ".btree.data." + sequence + "." + BTree.optimalDegree();
 
         if (args.length == 5){
             int temp = Integer.parseInt(args[4]);
@@ -53,39 +55,36 @@ public class GeneBankCreateBTree {
             exit(1);
         }
 
-		if (sequence > 31){
-			System.err.println("specified sequence is too long");
-			System.err.println("Please specifiy a sequence length such that 1 <= sequence <= 31");
-			System.err.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
+        if (sequence > 31){
+            System.err.println("specified sequence length is too long.");
+            System.err.println("Please specifiy a sequence length such that 1 <= sequence <= 31");
+            System.err.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
             exit(1);
-			
-		
-		}
-	
-		try {
-			Parser p = new Parser();
-			File gbFile = new File(gbName); 
-			ArrayList<Long> dna = p.parse(gbFile, sequence);
-			
-			BTree tree = new BTree(degree, sequence, genFileName, debug);
+        }
 
-			
-			//Each sequence will be passed to BTree as a new BTree Object, and handled there
-			int noSeqs = dna.size();
-			for(int i = 0; i < noSeqs; i++){
-				TreeObject obj = new TreeObject(dna.get(i));
-				tree.insert(obj);
-			}			
-		}
-		catch(FileNotFoundException fnfe){
-			System.out.println("Genebank File Not Found: Program Terminated.");
-			System.exit(1);
-		}catch(IOException e){
-			System.out.println("Genebank File Not Found: Program Terminated.");
-			System.exit(1);
-		}		
-	
-	}
+        try {
+            Parser p = new Parser();
+            File gbFile = new File(gbName);
+            ArrayList<Long> dna = p.parse(gbFile, sequence);
+
+            BTree tree = new BTree(degree, sequence, genFileName, debug, 0);
+
+
+            //Each sequence will be passed to BTree as a new BTree Object, and handled there
+            int noSeqs = dna.size();
+            for(int i = 0; i < noSeqs; i++){
+                TreeObject obj = new TreeObject(dna.get(i));
+                tree.insert(obj);
+            }
+            tree.writeTree();
+            if (debug == 1)
+                tree.writeDumpFile();
+        } catch(IOException e) {
+            System.err.println("Genebank File Not Found: Program Terminated.");
+            exit(1);
+        }
+
+    }
 
     public static void cachedBTree(String[] args) {
         int cacheSize = 0;
@@ -100,19 +99,6 @@ public class GeneBankCreateBTree {
         String gbkFile = args[2];
         int sequenceLength = Integer.parseInt(args[3]);
         String genFileName = gbkFile+ ".btree.data." + sequenceLength + "." + degree;
-
-		 if (sequence < 1){
-            System.err.println("specified sequence is too short, or is negative");
-            System.err.println("Please specifiy a sequence length such that 1 <= sequence <= 31");
-            System.err.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
-            exit(1);
-        }
-
-        if (sequence > 31){
-            System.err.println("specified sequence is too long");
-            System.err.println("Please specifiy a sequence length such that 1 <= sequence <= 31");
-            System.err.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
-            exit(1);
 
 
         try {
@@ -136,10 +122,6 @@ public class GeneBankCreateBTree {
             System.err.println("Genebank File Not Found: Program Terminated.");
             exit(1);
         }
-		catch(FileNotFoundException fnfe){
-			System.err.println("Genebank File Not Found: Program Terminated.");
-			exit(1);
-		}	
     }
+
 }
- 
