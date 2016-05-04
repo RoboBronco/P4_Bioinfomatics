@@ -53,6 +53,15 @@ public class GeneBankCreateBTree {
             exit(1);
         }
 
+		if (sequence > 31){
+			System.err.println("specified sequence is too long");
+			System.err.println("Please specifiy a sequence length such that 1 <= sequence <= 31");
+			System.err.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
+            exit(1);
+			
+		
+		}
+	
 		try {
 			Parser p = new Parser();
 			File gbFile = new File(gbName); 
@@ -92,6 +101,19 @@ public class GeneBankCreateBTree {
         int sequenceLength = Integer.parseInt(args[3]);
         String genFileName = gbkFile+ ".btree.data." + sequenceLength + "." + degree;
 
+		 if (sequence < 1){
+            System.err.println("specified sequence is too short, or is negative");
+            System.err.println("Please specifiy a sequence length such that 1 <= sequence <= 31");
+            System.err.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
+            exit(1);
+        }
+
+        if (sequence > 31){
+            System.err.println("specified sequence is too long");
+            System.err.println("Please specifiy a sequence length such that 1 <= sequence <= 31");
+            System.err.println("Usage: java GeneBankCreateBTree <0/1(no/with Cache)> <degree> <gbk file> <sequence length> [<cache size>] [<debug level>]");
+            exit(1);
+
 
         try {
             Parser p = new Parser();
@@ -114,6 +136,10 @@ public class GeneBankCreateBTree {
             System.err.println("Genebank File Not Found: Program Terminated.");
             exit(1);
         }
+		catch(FileNotFoundException fnfe){
+			System.err.println("Genebank File Not Found: Program Terminated.");
+			exit(1);
+		}	
     }
 }
  
