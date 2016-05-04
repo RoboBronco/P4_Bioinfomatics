@@ -24,7 +24,6 @@ public class GeneBankCreateBTree {
                 System.err.println("[<cache size>] should only be specified if you are using a cache.");
                 exit(1);
             }
-
         }
     }
 
@@ -54,6 +53,36 @@ public class GeneBankCreateBTree {
             exit(1);
         }
 
+		try {
+			Parser p = new Parser();
+			File gbFile = new File(gbName); 
+			ArrayList<Long> dna = p.parse(gbFile, sequence);
+			
+			BTree tree = new BTree(degree, sequence, genFileName, debug);
+
+			
+			//Each sequence will be passed to BTree as a new BTree Object, and handled there
+			int noSeqs = dna.size();
+			for(int i = 0; i < noSeqs; i++){
+				TreeObject obj = new TreeObject(dna.get(i));
+				tree.insert(obj);
+			}			
+		}
+		catch(FileNotFoundException fnfe){
+			System.out.println("Genebank File Not Found: Program Terminated.");
+			System.exit(1);
+		}catch(IOException e){
+			System.out.println("Genebank File Not Found: Program Terminated.");
+			System.exit(1);
+		}		
+	
+	}
+
+	public static <T> void cachedBTree(String[] args) {
+	
+	//This will, more or less, be the same as the above. Will update once we've discussed cache implementation.	
+	 	
+		int degree = Integer.parseInt(args[1]);
         if (sequence > 31){
             System.err.println("specified sequence length is too long.");
             System.err.println("Please specifiy a sequence length such that 1 <= sequence <= 31");
@@ -78,6 +107,14 @@ public class GeneBankCreateBTree {
             tree.writeTree();
             if (debug == 1)
                 tree.writeDumpFile();
+        	}
+
+        catch(FileNotFoundException fnfe){
+            System.out.println("Genebank File Not Found: Program Terminated.");
+            System.exit(1);
+        }catch(IOException e){
+            System.out.println("Genebank File Not Found: Program Terminated.");
+            System.exit(1);
         } catch(IOException e) {
             System.err.println("Genebank File Not Found: Program Terminated.");
             exit(1);
