@@ -6,7 +6,7 @@ public class BTree {
     private BTreeNode root, current, next;
     private TreeWriter writer;
     private int degree, numNodes, seqLength;
-    private int debug;
+    private static int debug;
     private String fName;
 
     public BTree(int degree, int length, String fileName, int debug, int cacheSize)
@@ -286,7 +286,7 @@ public class BTree {
         outStream.close();
     }
 
-    private int optimalDegree() {
+    public static int optimalDegree() {
         int dbSize = 4096;
         int fineD = 0;
         int nodeSize = 0;
