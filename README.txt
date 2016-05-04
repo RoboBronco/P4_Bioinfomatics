@@ -69,7 +69,8 @@ the command:
 PROGRAM DESIGN:
 
 The core of the program is the BTree class, which implements a B-tree data 
-structure made up of BTreeNodes. Each BTreeNode contains some metadata (including the maximum number of keys allowable and 2 boolean variables to flag whether 
+structure made up of BTreeNodes. Each BTreeNode contains some metadata (including 
+the maximum number of keys allowable and 2 boolean variables to flag whether 
 the node is the root or a leaf), an array list of TreeObjects, and an array list 
 of child pointers which are integer offsets. The BTree class includes methods to insert objects into the B-tree, to split a node when needed, and to write the 
 B-tree to a file. This class has two constructors, one to create a new B-tree 
