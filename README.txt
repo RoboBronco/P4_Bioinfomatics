@@ -72,7 +72,8 @@ The core of the program is the BTree class, which implements a B-tree data
 structure made up of BTreeNodes. Each BTreeNode contains some metadata (including 
 the maximum number of keys allowable and 2 boolean variables to flag whether 
 the node is the root or a leaf), an array list of TreeObjects, and an array list 
-of child pointers which are integer offsets. The BTree class includes methods to insert objects into the B-tree, to split a node when needed, and to write the 
+of child pointers which are integer offsets. The BTree class includes methods to
+insert objects into the B-tree, to split a node when needed, and to write the 
 B-tree to a file. This class has two constructors, one to create a new B-tree 
 and prepare to write it to a file, and another that is able to access an 
 existing B-tree file to use its contents.
@@ -95,21 +96,42 @@ TESTING:
 The following tests were performed using the GeneBankCreateBTree class (debug level 0):
 
 Degree		Sequence Length		Cache Size	File		Time (ms)
+-----------------------------------------------------------------------------------------------------
 2		10			NONE		test3.gbk	534
 2		10			100		test3.gbk	483
 2		10			500		test3.gbk	458
+
 2		10			NONE		test5.gbk	374883
 2		10			100		test5.gbk	381960
 2		10			500		test5.gbk	395885
 
+128		10			NONE		test3.gbk	529
+128		10			100		test3.gbk	348
+128		10			500		test3.gbk	364
+
+128		10			NONE		test5.gbk	365117
+128		10			100		test5.gbk	387573
+128		10			500		test5.gbk	362988
+
+
 The following tests were performed using the GeneBankSearch class (debug level 0):
 
-Degree		Sequence Length		Cache Size	Files (tree, query)			Time (ms)
-2		7			NONE		test3.gbk.btree.data.7.2, query7	805
-2		7			100		test3.gbk.btree.data.7.2, query7	387
-2		7			500		test3.gbk.btree.data.7.2, query7	365
-2		7			NONE		test5.gbk.btree.data.7.2, query7	817
-2		7			100		test5.gbk.btree.data.7.2, query7	422
-2		7			500		test5.gbk.btree.data.7.2, query7	463
+Degree		Sequence Length		Cache Size	Files (btree, query)			Time (ms)
+-----------------------------------------------------------------------------------------------------
+2		7			NONE		test3.gbk.btree.data.7.2, 	query7	805
+2		7			100		test3.gbk.btree.data.7.2, 	query7	387
+2		7			500		test3.gbk.btree.data.7.2, 	query7	365
+
+2		7			NONE		test5.gbk.btree.data.7.2, 	query7	817
+2		7			100		test5.gbk.btree.data.7.2, 	query7	422
+2		7			500		test5.gbk.btree.data.7.2, 	query7	463
+
+128		7			NONE		test3.gbk.btree.data.7.128, 	query7	604
+128		7			100		test3.gbk.btree.data.7.128, 	query7	355
+128		7			500		test3.gbk.btree.data.7.128, 	query7	330
+
+128		7			NONE		test5.gbk.btree.data.7.128, 	query7	616
+128		7			100		test5.gbk.btree.data.7.128, 	query7	333
+128		7			500		test5.gbk.btree.data.7.128, 	query7	319
 
 --------------------------------------------------------------------------------------
